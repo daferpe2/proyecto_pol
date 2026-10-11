@@ -1,9 +1,9 @@
 /**
- * Módulo genérico para manejar buscadores CSV (ESP y RDP)
- * Cada buscador se inicializa llamando initCsvBuscador(config)
+ * Módulo genérico para manejar buscadores Excel (ESP y RDP)
+ * Cada buscador se inicializa llamando initExcelBuscador(config)
  */
 
-function initCsvBuscador({
+function initExcelBuscador({
     formId,
     statusId,
     messageId,
@@ -23,7 +23,7 @@ function initCsvBuscador({
     let jobId = null;
 
     // -----------------------------
-    // 1. SUBIR ARCHIVO CSV
+    // 1. SUBIR ARCHIVO EXCEL
     // -----------------------------
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -32,7 +32,7 @@ function initCsvBuscador({
 
         status.style.display = "block";
         spinner.style.display = "block";
-        message.textContent = "Subiendo archivo...";
+        message.textContent = "Subiendo archivo Excel...";
 
         try {
             const resp = await fetch(uploadUrl, {
@@ -101,7 +101,7 @@ function initCsvBuscador({
     }
 
     // -----------------------------
-    // 3. DESCARGAR ARCHIVO CSV
+    // 3. DESCARGAR ARCHIVO EXCEL
     // -----------------------------
     btnDescargar.addEventListener("click", async () => {
         if (!jobId) return;
@@ -119,7 +119,7 @@ function initCsvBuscador({
 
             const a = document.createElement("a");
             a.href = url;
-            a.download = `${downloadFilenamePrefix}_${jobId}.csv`;
+            a.download = `${downloadFilenamePrefix}_${jobId}.xlsx`;
             a.click();
 
             window.URL.revokeObjectURL(url);
@@ -134,13 +134,13 @@ function initCsvBuscador({
 // =====================================================
 // Inicializar buscador ESP
 // =====================================================
-initCsvBuscador({
+initExcelBuscador({
     formId: "form-upload",
     statusId: "job-status",
     messageId: "job-message",
     spinnerId: "spinner",
     downloadBtnId: "btn-descargar",
-    uploadUrl: "/buscador-csv/upload",
+    uploadUrl: "/buscador-csv/upload",   // ← si cambias la ruta, actualízala aquí
     resultUrlBase: "/buscador-csv/result",
     downloadFilenamePrefix: "resultado_job"
 });
@@ -148,7 +148,7 @@ initCsvBuscador({
 // =====================================================
 // Inicializar buscador RDP
 // =====================================================
-initCsvBuscador({
+initExcelBuscador({
     formId: "form-upload-rdp",
     statusId: "job-status-rdp",
     messageId: "job-message-rdp",

@@ -129,7 +129,7 @@ async def get_registros_busqueda(
 ):
     query = (
         select(TablaBaseEspF)
-        .where(TablaBaseEspF.text_buscador.ilike(f"%{q}%"))
+        .where(TablaBaseEspF.texto_busqueda.ilike(f"%{q}%"))
         .limit(limit)
         .offset(offset)
     )

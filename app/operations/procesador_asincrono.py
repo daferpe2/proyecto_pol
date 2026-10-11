@@ -1,14 +1,14 @@
 import asyncio
-import csv
 import io
 import os
 import uuid
 from datetime import datetime
 
+from openpyxl import Workbook, load_workbook
 from sqlmodel import Session, select
 
-from db import engine  # donde tengas tu engine de SQLModel
-from models import (  # ajusta import según tu proyecto
+from db import engine
+from models import (
     BuscadorJob,
     JobEstado,
     TablaBaseEspF,
@@ -18,14 +18,15 @@ SEM_MAX = 10
 RESULTS_DIR = "results"
 
 
-async def procesar_csv_job(job_id: int, csv_text: str):
+async def procesar_excel_job(job_id: int, excel_bytes: bytes):
     """
-    Procesa un CSV asociado a un job:
-    - Lee filas del CSV.
-    - Busca en TablaBaseEspF usando text_buscador.
-    - Genera un CSV de resultados.
+    Procesa un archivo Excel asociado a un job:
+    - Lee filas del Excel.
+    - Busca en TablaBaseEspF usando texto_busqueda.
+    - Genera un Excel de resultados.
     - Actualiza el job con ruta del archivo y estado final.
     """
+
     loop = asyncio.get_event_loop()
     sem = asyncio.Semaphore(SEM_MAX)
 
@@ -68,10 +69,25 @@ async def procesar_csv_job(job_id: int, csv_text: str):
 
     try:
         # -----------------------------
-        # 2. Parsear CSV de entrada
+        # 2. Cargar Excel desde bytes
         # -----------------------------
-        reader = csv.DictReader(io.StringIO(csv_text), delimiter=";")
-        filas = list(reader)
+        wb = load_workbook(filename=io.BytesIO(excel_bytes), data_only=True)
+        ws = wb.active
+
+        # Validar encabezados mínimos
+        encabezados = [cell.value for cell in ws[1]]
+        if "no_cedula" not in encabezados or "apellidos_nombre" not in encabezados:
+            raise ValueError("El Excel debe contener columnas 'no_cedula' y 'apellidos_nombre'.")
+
+        idx_cedula = encabezados.index("no_cedula")
+        idx_nombre = encabezados.index("apellidos_nombre")
+
+        filas = []
+        for row in ws.iter_rows(min_row=2, values_only=True):
+            filas.append({
+                "no_cedula": str(row[idx_cedula] or "").strip(),
+                "apellidos_nombre": str(row[idx_nombre] or "").strip(),
+            })
 
         resultados: list[dict] = []
 
@@ -81,7 +97,7 @@ async def procesar_csv_job(job_id: int, csv_text: str):
         def sync_buscar_por_criterio(criterio: str):
             with Session(engine) as session:
                 stmt = select(TablaBaseEspF).where(
-                    TablaBaseEspF.text_buscador.ilike(f"%{criterio}%")
+                    TablaBaseEspF.texto_busqueda.ilike(f"%{criterio}%")
                 )
                 return session.exec(stmt).all()
 
@@ -90,8 +106,8 @@ async def procesar_csv_job(job_id: int, csv_text: str):
         # -----------------------------
         async def procesar_fila(fila: dict):
             async with sem:
-                no_cedula = (fila.get("no_cedula") or "").strip()
-                apellidos_nombre = (fila.get("apellidos_nombre") or "").strip()
+                no_cedula = fila["no_cedula"]
+                apellidos_nombre = fila["apellidos_nombre"]
                 criterio = f"{no_cedula} {apellidos_nombre}".strip()
 
                 try:
@@ -148,16 +164,16 @@ async def procesar_csv_job(job_id: int, csv_text: str):
                         "resultados": [],
                     })
 
-        # Lanzar todas las tareas
         await asyncio.gather(*(procesar_fila(f) for f in filas))
 
         # -----------------------------
-        # 5. Generar CSV final en memoria
+        # 5. Generar Excel final
         # -----------------------------
-        output = io.StringIO()
-        writer = csv.writer(output, delimiter=";")
+        out_wb = Workbook()
+        out_ws = out_wb.active
+        out_ws.title = "Resultados"
 
-        writer.writerow([
+        out_ws.append([
             "input_no_cedula",
             "input_apellidos_nombre",
             "criterio_busqueda",
@@ -170,7 +186,7 @@ async def procesar_csv_job(job_id: int, csv_text: str):
 
         for r in resultados:
             if not r["resultados"]:
-                writer.writerow([
+                out_ws.append([
                     r["input_no_cedula"],
                     r["input_apellidos_nombre"],
                     r["criterio_busqueda"],
@@ -182,7 +198,7 @@ async def procesar_csv_job(job_id: int, csv_text: str):
                 ])
             else:
                 for reg in r["resultados"]:
-                    writer.writerow([
+                    out_ws.append([
                         r["input_no_cedula"],
                         r["input_apellidos_nombre"],
                         r["criterio_busqueda"],
@@ -194,25 +210,21 @@ async def procesar_csv_job(job_id: int, csv_text: str):
                     ])
 
         # -----------------------------
-        # 6. Escribir CSV a disco
+        # 6. Guardar archivo
         # -----------------------------
         if not os.path.exists(RESULTS_DIR):
             os.makedirs(RESULTS_DIR, exist_ok=True)
 
-        filename = f"resultado_job_{job_id}_{uuid.uuid4().hex}.csv"
+        filename = f"resultado_job_{job_id}_{uuid.uuid4().hex}.xlsx"
         ruta = os.path.join(RESULTS_DIR, filename)
 
-        with open(ruta, "w", encoding="utf-8", newline="") as f:
-            f.write(output.getvalue())
+        out_wb.save(ruta)
 
         # -----------------------------
-        # 7. Actualizar job con ruta y estado COMPLETADO
+        # 7. Actualizar job
         # -----------------------------
         await loop.run_in_executor(None, lambda: sync_set_ruta(ruta))
         await loop.run_in_executor(None, lambda: sync_set_estado(JobEstado.COMPLETADO))
 
     except Exception:
-        # -----------------------------
-        # 8. Manejo de error global del job
-        # -----------------------------
         await loop.run_in_executor(None, lambda: sync_set_estado(JobEstado.ERROR, str(e)))

@@ -57,8 +57,8 @@ async def ejecutar_busqueda(
 
     check_roles(user=user)
 
-    resultados_rdp = await busqueda_rdp(db=db,text_buscador=texto_busqueda)
-    resultados_esp = await busqueda_esp(db=db,text_buscador=texto_busqueda)
+    resultados_rdp = await busqueda_rdp(db=db,texto_busqueda=texto_busqueda)
+    resultados_esp = await busqueda_esp(db=db,texto_busqueda=texto_busqueda)
 
     return templates.TemplateResponse(
         "buscador_resultados.html",

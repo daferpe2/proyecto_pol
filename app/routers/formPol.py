@@ -2,10 +2,7 @@ import asyncio
 import base64
 import json
 import os
-import shutil
 from datetime import datetime
-
-from app.operations.crudAuditoria import create_registro_auditoria
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from fastapi import (
@@ -14,7 +11,6 @@ from fastapi import (
     File,
     HTTPException,
     Request,
-    Response,
     UploadFile,
     status,
 )
@@ -23,8 +19,9 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Redirect
 from fastapi.templating import Jinja2Templates
 
 from app.operations.autentiacion_funciones import get_current_user_id
-from app.operations.buscador_rdp_csv import procesar_csv_job
+from app.operations.buscador_rdp_csv import procesar_excel_job
 from app.operations.checkroles import check_roles, require_role
+from app.operations.crudAuditoria import create_registro_auditoria
 from app.operations.crudPoligraf import (
     create_registro,
     delete_registro,
@@ -35,19 +32,16 @@ from app.operations.crudPoligraf import (
     get_registros_regional,
 )
 from app.operations.encryptedpayload import AES_KEY, EncryptedPayload
-from app.operations.generacion_documento import numero_documento
 from app.operations.keyset import keyset_query
 from db import SessionDep
 from models import (
     EstadosValidacion,
     JobEstado,
-    PdpPoligrafistas,
     PdpPoligrafistasTabla,
     PdpPoligrafistasTablaPublic,
     PdpPoligrafistasTablaPublicCreate,
     PdpPoligrafistasUpdate,
     RDPAuditoria,
-    RDPAuditoriaCreate,
     RDPJob,
     Rol,
     UserTable,
@@ -432,36 +426,34 @@ async def lista_rdp_fragment(
 
 
 
-# busqueda CSV RDP
 @router.post("/upload")
-async def upload_csv(
+async def upload_csv_rdp(
     session: SessionDep,
     file: UploadFile = File(...),
     user: UserTable = Depends(get_current_user_id),
-
 ):
     if not isinstance(user, UserTable):
-        return RedirectResponse("/",status_code=status.HTTP_303_SEE_OTHER)
-    
+        return RedirectResponse("/", status_code=status.HTTP_303_SEE_OTHER)
+
     check_roles(user)
 
-    # Validar tamaño máximo (5 MB)
     content = await file.read()
     if len(content) > 5 * 1024 * 1024:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Archivo demasiado grande (máx 5 MB)")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Archivo demasiado grande (máx 5 MB)"
+        )
 
-    csv_text = content.decode("utf-8", errors="ignore")
-
-    # Crear job
+    # Crear job en la tabla correcta
     job = RDPJob(usuario=user.nombre_apellido)
     session.add(job)
     session.commit()
     session.refresh(job)
 
-    # Lanzar procesamiento asincrónico
-    asyncio.create_task(procesar_csv_job(job.id, csv_text))
+    asyncio.create_task(procesar_excel_job(job.id, content))
 
     return {"job_id": job.id, "estado": job.estado}
+
 
 
 
@@ -473,33 +465,36 @@ def estado_o_descarga_job(
     descargar: bool = False,
 ):
     job = db.get(RDPJob, job_id)
+
+    # 🔥 ESTA LÍNEA ES LA CLAVE
+    db.refresh(job)
+
     if not job:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Job no encontrado")
+        return {"estado": "ERROR", "error_detalle": "Job no encontrado"}
 
     if job.usuario != user.nombre_apellido:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="No tienes permiso para este job")
+        return {"estado": "ERROR", "error_detalle": "No tienes permiso para este job"}
 
-    # Estados del job
     if job.estado in {JobEstado.PENDIENTE, JobEstado.EN_PROCESO}:
         return {"estado": job.estado}
 
     if job.estado in {JobEstado.ERROR, JobEstado.INTERRUMPIDO}:
         return {"estado": job.estado, "error_detalle": job.error_detalle}
 
-    # COMPLETADO → devolver JSON si descargar=false
     if not descargar:
         return {"estado": "COMPLETADO"}
 
-    # COMPLETADO → descargar archivo si descargar=true
     ruta = job.ruta_archivo_resultado
     if not ruta or not os.path.exists(ruta):
         return {"estado": "EXPIRADO"}
 
     return FileResponse(
         ruta,
-        media_type="text/csv",
-        filename=f"resultado_job_rdp_{numero_documento()}.csv"
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        filename=f"resultado_job_rdp_{job_id}.xlsx"
     )
+
+
 
 
 @router.get("/lista_rdp_regional_f", response_model=list[PdpPoligrafistasTablaPublic])

@@ -1,0 +1,39 @@
+{% for item in registros %}
+<div class="card-poligrafico">
+
+    <div class="card-header">
+        <h3>{{ item.apellidos_nombre }}</h3>
+    </div>
+
+    <div class="card-body">
+        <p><strong>Fecha Examen:</strong> {{ item.fecha_evaluacion }}</p>
+        <p><strong>Cédula:</strong> {{ item.no_cedula }}</p>
+        <p><strong>Cargo:</strong> {{ item.cargo }}</p>
+        <p><strong>Unidad:</strong> {{ item.batallon_buque_unidad_labora }}</p>
+        <p><strong>Unidad:</strong> {{ item.regional }}</p>
+    </div>
+
+    <div class="card-actions">
+        {% if user.rol in ["QC"] %}
+            <form action="/tabla-base-esp/editar_poligrafico/{{ item.id }}" method="get">
+                <button class="btn btn-edit">Editar</button>
+            </form>
+
+            <form action="/tabla-base-esp/eliminar_poligrafico/{{ item.id }}" method="post"
+                onsubmit="return confirm('¿Desea eliminar este registro?');">
+                <button class="btn btn-delete">Eliminar</button>
+            </form>
+
+            <form action="/tabla-poligraf/revertir_rdp/{{ item.id }}" method="post"
+                    onsubmit="return confirm('¿Revertir auditoría?');">
+                <button class="btn btn-warning">Validar</button>
+            </form>
+        {% endif %}
+    </div>
+
+</div>
+{% endfor %}
+
+<!-- ESTO DEBE IR FUERA DEL LOOP -->
+<input type="hidden" id="fragment-next-cursor" value="{{ next_cursor }}">
+<input type="hidden" id="fragment-prev-cursor" value="{{ prev_cursor }}">

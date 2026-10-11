@@ -1,0 +1,25 @@
+{% macro input(name, label, type="text", required=False) %}
+<label>
+    {{ label }}
+    <input name="{{ name }}" type="{{ type }}" {% if required %}required{% endif %}>
+</label>
+{% endmacro %}
+
+{% macro select(name, label, options, required=False) %}
+<label>
+    {{ label }}
+    <select name="{{ name }}" {% if required %}required{% endif %}>
+        <option value="">Seleccione</option>
+        {% for opt in options %}
+        <option value="{{ opt }}">{{ opt }}</option>
+        {% endfor %}
+    </select>
+</label>
+{% endmacro %}
+
+{% macro textarea(name, label) %}
+<label>
+    {{ label }}
+    <textarea name="{{ name }}"></textarea>
+</label>
+{% endmacro %}

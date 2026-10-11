@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">Listado de Resultados ESP</h2>
+
+    <!-- Buscador -->
+    <form method="get" action="/tabla-poligraf/lista_rdp" class="mb-4 d-flex">
+        <input type="text" name="q" class="form-control me-2"
+               placeholder="Buscar por nombre o cédula..."
+               value="{{ q }}">
+        <button class="btn btn-primary">Buscar</button>
+    </form>
+
+    {% for item in registros %}
+    <div class="card-poligrafico">
+        
+        <div class="card-header">
+            <h3>{{ item.apellidos_nombre }}</h3>
+            <!-- <span class="fecha">{{ item.fecha_evaluacion }}</span> -->
+        </div>
+
+        <div class="card-body">
+            <p><strong>Fecha Examen:</strong> {{ item.fecha_asp }}</p>
+            <p><strong>Apellidos y Nombres:</strong> {{ item.apellidos_nombre }}</p>
+            <p><strong>Cédula:</strong> {{ item.no_cedula }}</p>
+            <p><strong>Cargo:</strong> {{ item.cargo }}</p>
+            <p><strong>Unidad:</strong> 
+                {{ item.batallon_buque_unidad_labora }}
+            </p>
+        </div>
+
+        <div class="card-actions">
+        {% if user.rol in ["QC","QC_S", "ANALISTA", "SUPER_ADMIN","JEFE"] %}
+            <form action="/tabla-base-esp/editar_poligrafico/{{ item.id }}" method="get">
+                <button class="btn btn-edit">Editar</button>
+            </form>
+        
+            <form action="/tabla-base-esp/eliminar_poligrafico/{{ item.id }}" method="post"
+                  onsubmit="return confirm('¿Desea eliminar este registro?');">
+                <button class="btn btn-delete">Eliminar</button>
+            </form>
+
+        {% endif %}
+        </div>
+
+        </div>
+
+    {% endfor %}
+
+    <div class="pagination mt-4">
+        {% if offset > 0 %}
+        <a class="btn btn-edit"
+           href="/tabla-base-esp/lista_esp?limit={{ limit }}&offset={{ offset - limit }}&q={{ q }}">
+            Anterior
+        </a>
+        {% endif %}
+
+        {% if registros|length == limit %}
+        <a class="btn btn-edit"
+           href="/tabla-base-esp/lista_esp?limit={{ limit }}&offset={{ offset + limit }}&q={{ q }}">
+            Siguiente
+        </a>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}

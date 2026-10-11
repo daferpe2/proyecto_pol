@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">Listado de Usuarios</h2>
+
+        <a class="btn btn-edit"
+           href="/usuarios/create"
+           style="text-decoration: none;">
+           Ingresar Nuevo Usuario
+        </a>
+
+<table class="tabla-usuarios">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre y Apellido</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Activo</th>
+            <th>Regional</th>
+            <th>Comisión</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for item in registros %}
+        <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.nombre_apellido }}</td>
+            <td>{{ item.email }}</td>
+            <td>{{ item.rol }}</td>
+            <td>{{ "Sí" if item.activo else "No" }}</td>
+            <td>{{ item.regional }}</td>
+            <td>{{ item.regional_comision }}</td>
+
+            <td>
+                <a href="/usuarios/editar_usuario/{{ item.id }}" class="btn btn-edit">
+                    Editar
+                </a>
+
+                <form action="/usuarios/eliminar_usuario/{{ item.id }}"
+                      method="post"
+                      style="display:inline-block"
+                      onsubmit="return confirm('¿Desea eliminar este usuario?');">
+                    <button class="btn btn-delete">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+    <!-- Paginación -->
+    <div class="pagination mt-4">
+        {% if offset > 0 %}
+        <a class="btn btn-edit"
+           href="/usuarios/lista_usuarios?limit={{ limit }}&offset={{ offset - limit }}">
+            Anterior
+        </a>
+        {% endif %}
+
+        {% if registros|length == limit %}
+        <a class="btn btn-edit"
+           href="/usuarios/lista_usuarios?limit={{ limit }}&offset={{ offset + limit }}">
+            Siguiente
+        </a>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}

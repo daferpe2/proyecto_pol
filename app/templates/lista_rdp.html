@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">Listado de Resultados RDP</h2>
+
+    <!-- Buscador -->
+    <form method="get" action="/tabla-poligraf/rdp" class="mb-4 d-flex">
+        <input type="text" name="q" class="form-control me-2"
+               placeholder="Buscar por nombre o cédula..."
+               value="{{ q }}">
+        <button class="btn btn-primary">Buscar</button>
+    </form>
+
+    {% for r in registros %}
+    <div class="card-poligrafico">
+        
+        <div class="card-header">
+            <h3>{{ r.apellidos_nombres }}</h3>
+            <span class="badge bg-secondary">{{ r.estado.name }}</span>
+        </div>
+
+        <div class="card-body">
+            <p><strong>Fecha:</strong> {{ r.fecha_evaluacion }}</p>
+            <p><strong>Apellidos y Nombres:</strong> {{ r.apellidos_nombres }}</p>
+            <p><strong>Cédula:</strong> {{ r.no_cedula }}</p>
+            <p><strong>Categoría:</strong> {{ r.categoria }}</p>
+            <p><strong>Regional</strong> {{ r.regional }}</p>
+            <p><strong>Unidad:</strong> {{ r.batallon_buque_unidad_labora }}</p>
+            <p><strong>Resultados:</strong> {{ r.resultado_epp }}</p>
+        </div>
+
+        <div class="card-actions">
+
+            {# --- BOTÓN EDITAR --- #}
+            {% if user.rol in ["QC","QC_S", "ANALISTA", "SUPER_ADMIN","JEFE"] %}
+            <form action="/tabla-poligraf/editar_rdp/{{ r.id }}" method="get">
+                <button class="btn btn-edit">Editar</button>
+            </form>
+
+            {# --- BOTÓN ELIMINAR (solo SUPER_ADMIN) --- #}
+            <form action="/tabla-poligraf/borrar_poli/{{ r.id }}" method="post"
+                  onsubmit="return confirm('¿Desea eliminar este registro?');">
+                <button class="btn btn-delete">Eliminar</button>
+            </form>
+
+
+        </div>
+            {% endif %}
+
+    </div>
+    {% endfor %}
+
+    <div class="pagination mt-4">
+        {% if offset > 0 %}
+        <a class="btn btn-edit"
+        href="/tabla-poligraf/rdp?limit={{ limit }}&offset={{ offset - limit }}&q={{ q }}">
+            Anterior
+        </a>
+        {% endif %}
+
+        {% if registros|length == limit %}
+        <a class="btn btn-edit"
+        href="/tabla-poligraf/rdp?limit={{ limit }}&offset={{ offset + limit }}&q={{ q }}">
+            Siguiente
+        </a>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}

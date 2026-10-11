@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="content">
+
+  <form id="form-rdp" class="form-container" onsubmit="handleSubmitRdp(event)">
+
+    <!-- ===================== ACORDEÓN 1 ===================== -->
+
+    <h2 class="titulo">REGISTRO RDP — POLIGRAFISTAS</h2>
+
+      <div class="accordion">
+
+        <button type="button" class="accordion-btn">Datos del Proceso RDP</button>
+        <div class="accordion-content">
+
+          <label>Fecha Evaluación
+            <input name="fecha_evaluacion" type="date" required>
+          </label>
+
+          <label>Regional
+            <select name="regional" required>
+              <option value="">Seleccione</option>
+              <option>DEPEC</option>
+              <option>RCICA</option>
+              <option>RCIPA</option>
+              <option>RCIAM</option>
+              <option>RCIOR</option>
+            </select>
+          </label>
+
+          <label>Categoría
+            <select name="categoria" id="categoria" required>
+              <option value="">Seleccione categoría</option>
+            </select>
+          </label>
+
+          <label>Proceso
+            <select name="proceso" id="proceso" required>
+              <option value="">Seleccione proceso</option>
+            </select>
+          </label>
+
+          <label>Complemento Proceso
+            <input name="complemento_proceso" type="text" autocomplete="on">
+          </label>
+
+          <label>Temas Examinados
+            <!-- <textarea name="temas_examinados" rows="2" autocomplete="on"></textarea> -->
+             <select name="temas_examinados" id="temas_examinados">
+             <option value="">Seleccione</option>
+                <option>SUMINISTRO DE INFORMACION, VINCULOS, ALTERACION DE FUNCIONES</option>
+                <option>SUMINISTRO DE INFORMACION, VINCULOS, IRREGULARIDADES CON MATERIAL RESERVADO</option>
+                <option>SUMINISTRO DE INFORMACION, VINCULOS, PARTICIPACION EN ACTIVIDADES ILEGALES</option>
+                <option>SUMINISTRO DE INFORMACION, BENEFICIO POR CORRUPCION, OCULTAMIENTO DE CORRUPCION</option>
+                <option>SUMINISTRO DE INFORMACION, VINCULOS, PLANES</option>
+                <option>CONSUMO HABITUAL, VINCULOS, PLANES</option>
+                <option>SUMINISTRO DE INFORMACION, VINCULOS, ALTERACION DE FUNCIONES, CONSUMO HABITUAL</option>
+                <option>SUMINISTRO DE INFORMACION, VINCULOS, PARTICIPACION EN DELITOS, PLANES DE CAUSAR DAÑO</option>
+                <option>PLANES DE CAUSAR DAÑO, VINCULOS, PARTICIPACION EN DELITOS, CONSUMO HABITUAL</option>
+                <option>SUMINISTRO DE INFORMACION, VINCULOS, SABOTAJE, DELITOS</option>
+             </select>
+          </label>
+
+          <label>Técnica
+            <select name="tecnica" required>
+              <option value="">Seleccione técnica</option>
+              <option>AFMGQT</option>
+              <option>ZCT FEDERAL</option>
+              <option>BIZONA</option>
+              <option>UTAH</option>
+              <option>DLST</option>
+            </select>
+          </label>
+
+        </div>
+      </div>
+
+      <!-- ===================== ACORDEÓN 2 ===================== -->
+      <div class="accordion">
+        <button type="button" class="accordion-btn">Unidad / Organización</button>
+        <div class="accordion-content">
+
+          <label>Fuerza / Jefatura
+            <select name="fuerza_jefatura" required>
+              <option value="">Seleccione fuerza/jefatura</option>
+            </select>
+          </label>
+
+          <label>Comando / Dirección / Brigada / Flotilla / Grupo
+            <select name="comando_direccion_brigada_flotilla_grupo">
+              <option value="">Seleccione</option>
+            </select>
+          </label>
+
+          <label>Batallón / Buque / Unidad donde labora
+            <!-- <select name="batallon_buque_unidad_labora">
+              <option value="">Seleccione</option>
+            </select> -->
+            <input type="text" name="batallon_buque_unidad_labora", id="batallon_buque_unidad_labora" autocomplete="additional-name"
+            style="text-transform: uppercase;">
+          </label>
+
+        </div>
+      </div>
+
+      <!-- ===================== ACORDEÓN 3 ===================== -->
+      <div class="accordion">
+        <button type="button" class="accordion-btn">Datos Personales del Evaluado</button>
+        <div class="accordion-content">
+
+          <label>No. Cédula
+            <input name="no_cedula" type="text" minlength="6" maxlength="10" pattern="[0-9]{7,10}" required>
+          </label>
+
+          <label>Clase
+            <select name="clase" required>
+              <option value="">Seleccione</option>
+            </select>
+          </label>
+
+          <label>Grado
+            <select name="grado" required>
+              <option value="">Seleccione</option>
+            </select>
+          </label>
+
+
+          <label>Apellidos y Nombres
+            <input name="apellidos_nombres" type="text" required
+            style="text-transform: uppercase;">
+          </label>
+
+          <label>Cargo
+            <input name="cargo" type="text" autocomplete="on" required
+            style="text-transform: uppercase;">
+          </label>
+
+        </div>
+      </div>
+
+      <!-- ===================== ACORDEÓN 4 ===================== -->
+      <div class="accordion">
+        <button type="button" class="accordion-btn">Resultados de la Evaluación</button>
+        <div class="accordion-content">
+
+          <label>Resultado EPP
+            <select name="resultado_epp" required>
+              <option value="">Seleccione resultado</option>
+              <option>NSR</option>
+              <option>SR</option>
+              <option>NDI</option>
+              <option>DI</option>
+              <option>INC</option>
+              <option>N.O.</option>
+              <option>NPE</option>
+            </select>
+          </label>
+
+          <label>Tema SR/DI
+            <select name="tema_sr_di" id="tema_sr_di">
+              <option selected>NO</option>
+              <option>SI</option>
+            </select>
+          </label>
+
+          <label>Información Obtenida
+            <textarea name="informacion_obtenida"></textarea>
+          </label>
+
+          <label>Información Relevante
+            <select name="informacion_relevante" id="informacion_relevante">
+              <option selected>NO</option>
+              <option>SI</option>
+            </select>
+          </label>
+
+          <label>Observaciones
+            <textarea name="observaciones" required></textarea>
+          </label>
+
+        </div>
+      </div>
+
+      <!-- ===================== ACORDEÓN 5 ===================== -->
+      <div class="accordion">
+        <button type="button" class="accordion-btn">Consumo de Sustancias / Pruebas Adicionales</button>
+        <div class="accordion-content">
+
+          <label>Refiere a Alguien
+            <select name="refiere_alguien">
+              <option>SI</option>
+              <option selected>NO</option>
+            </select>
+          </label>
+
+          <label>¿Se realizó test de consumo?
+            <div>
+              <label><input type="radio" name="se_realizo_test_consumo" value="true"> Sí</label>
+              <label><input type="radio" name="se_realizo_test_consumo" value="false" checked> No</label>
+            </div>
+          </label>
+
+          <label>Resultado TMD
+            <!-- <input name="resultado_tmd" id="resultado_tmd" type="text" value="NoData" autocomplete="on"> -->
+            <select name="resultado_tmd" id="resultado_tmd">
+              <option>SI</option>
+              <option selected>NO</option>
+            </select>
+          </label>
+
+          <label>Tipo de Sustancia
+            <!-- <input name="tipo_sustancia" id="tipo_sustancia" type="text" value="NoData" autocomplete="on"> -->
+             <select name="tipo_sustancia" id="tipo_sustancia">
+              <option value="NoData">Seleccione resultado</option>
+              <option>COC</option>
+              <option>THC</option>
+              <option>AMP</option>
+              <option>BZO</option>
+              <option>OPI</option>
+            </select>
+          </label>
+
+        <label>
+          Ain
+          <input type="text" name="ain" id="ain" value="{{ user.codigo }}">
+        </label>
+
+        <input type="hidden" name="usuario" id="usuario" value="{{ user.id }}">
+
+        </div>
+      </div>
+
+    <button type="submit">Guardar Registro RDP</button>
+    </div>
+
+  </form>
+
+
+</div>
+
+
+<script type="module" src="/app/static/js/form_rdp.js"></script>
+<script src="/app/static/js/unidades_form_esp.js"></script>
+<script src="/app/static/js/unidades_form_categorias.js"></script>
+<script src="/app/static/js/grado_clase.js"></script>
+
+<script>
+  const accordions = document.querySelectorAll(".accordion-btn");
+  accordions.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const content = btn.nextElementSibling;
+      content.style.display = content.style.display === "block" ? "none" : "block";
+    });
+  });
+</script>
+
+<script type="module">
+import { encryptJSON } from "/static/js/encryption.js";
+
+// ======================================================
+// VALIDACIÓN Y ACTIVACIÓN DE CAMPOS DE TEST DE CONSUMO
+// ======================================================
+document.addEventListener("DOMContentLoaded", () => {
+
+    const radios = document.querySelectorAll("input[name='se_realizo_test_consumo']");
+    const resultadoTmd = document.getElementById("resultado_tmd");
+    const tipoSustancia = document.getElementById("tipo_sustancia");
+
+    function actualizarEstadoTest() {
+        const seleccionado = document.querySelector("input[name='se_realizo_test_consumo']:checked");
+        if (!seleccionado) return;
+
+        if (seleccionado.value === "true") {
+            // ✔ Se realizó test → habilitar campos y limpiar
+            resultadoTmd.disabled = false;
+            tipoSustancia.disabled = false;
+
+            resultadoTmd.required = true;
+            tipoSustancia.required = true;
+
+            resultadoTmd.value = "";
+            tipoSustancia.value = "";
+
+        } else {
+            // ✔ NO se realizó test → deshabilitar y poner "NoData"
+            resultadoTmd.disabled = true;
+            tipoSustancia.disabled = true;
+
+            resultadoTmd.required = false;
+            tipoSustancia.required = false;
+
+            resultadoTmd.value = "NoData";
+            tipoSustancia.value = "NoData";
+        }
+    }
+
+    // Ejecutar al cargar
+    actualizarEstadoTest();
+
+    // Ejecutar cuando cambie el radio
+    radios.forEach(r => r.addEventListener("change", actualizarEstadoTest));
+});
+</script>
+
+
+{% endblock %}

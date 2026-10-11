@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="content">
+
+  <form id="form-user-create" class="form-container" onsubmit="handleSubmitRdp(event)"
+  action="/">
+
+    <h2 class="titulo">Crear Usuario</h2>
+
+    <div class="accordion">
+      <button type="button" class="accordion-btn">Datos del Usuario</button>
+      <div class="accordion-content">
+
+        <label>Nombre y Apellido
+          <input type="text" name="nombre_apellido"
+                 required>
+        </label>
+
+        <label>Email
+          <input type="email" name="email"
+                 required>
+        </label>
+
+        <label>Rol
+          <select name="rol" required>
+            <option value="">Seleccione rol</option>
+            <option value="REGISTRO">REGISTRO</option>
+            <option value="QC">QC</option>
+            <option value="QC_S">QC_S</option>
+            <option value="ANALISTA">ANALISTA</option>
+            <option value="SUPER_ADMIN">SUPER_ADMIN</option>
+            <option value="JEFE">JEFE</option>
+          </select>
+        </label>
+
+        <label>Activo
+          <select name="activo">
+            <option value="true" selected>Activo</option>
+            <option value="false">Inactivo</option>
+          </select>
+        </label>
+
+        <label>Código
+          <input type="text" name="codigo">
+        </label>
+
+        <label>Password
+          <input type="password" name="password" required>
+        </label>
+
+      </div>
+    </div>
+
+    <div class="accordion">
+      <button type="button" class="accordion-btn">Regionales</button>
+      <div class="accordion-content">
+
+        <label>Regional
+          <select name="regional">
+            <option value="">Seleccione regional</option>
+            <option>DEPEC</option>
+            <option>RCICA</option>
+            <option>RCIPA</option>
+            <option>RCIAM</option>
+            <option>RCIOR</option>
+          </select>
+        </label>
+
+        <label>Regional Comisión
+          <select name="regional_comision">
+            <option value="">Seleccione comisión</option>
+            <option>DEPEC</option>
+            <option>RCICA</option>
+            <option>RCIPA</option>
+            <option>RCIAM</option>
+            <option>RCIOR</option>
+          </select>
+        </label>
+
+      </div>
+    </div>
+
+    <button type="submit" id="btn-guardar">Crear Usuario</button>
+    <p id="msg" class="mensaje"></p>
+
+  </form>
+
+</div>
+
+<script type="module" src="/app/static/js/form_create_user.js"></script>
+
+<script>
+  const accordions = document.querySelectorAll(".accordion-btn");
+  accordions.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const content = btn.nextElementSibling;
+      content.style.display = content.style.display === "block" ? "none" : "block";
+    });
+  });
+</script>
+
+
+{% endblock %}

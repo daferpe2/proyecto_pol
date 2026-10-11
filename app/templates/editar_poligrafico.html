@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content">
+<form id="form-resultados-esp" class="form-container">
+
+  <h2 class="titulo">
+    ACTUALIZAR RESULTADOS ESP
+  </h2>
+
+  <!-- ACORDEÓN: Datos del Proceso -->
+  <div class="accordion">
+    <button type="button" class="accordion-btn">Datos del Proceso</button>
+    <div class="accordion-content">
+
+      <label>Fecha ESP
+        <input name="fecha_asp" type="date" value="{{ registro.fecha_asp }}">
+      </label>
+
+      <label>Proceso
+        <select name="proceso">
+          <option value="">Seleccione proceso</option>
+          {% set procesos = [
+            "INGRESO JINAV","CAMBIO DE ESPECIALIDAD","ASCENSOS","PD (R)",
+            "PASANTES Y PD","CERTIFICACION OTAN"
+          ] %}
+          {% for p in procesos %}
+            <option value="{{ p }}" 
+              {% if registro.proceso and registro.proceso.strip() == p %}selected{% endif %}>
+              {{ p }}
+            </option>
+          {% endfor %}
+        </select>
+      </label>
+
+      <label>Fuerza / Jefatura
+        <select name="fuerza_jefatura">
+          <option value="">Seleccione fuerza/jefatura</option>
+          {% set fuerzas = [
+            "COARC","DIMAR","IGARC","JEJUR","JPLAN","CONAV","CIMAR","JOLAN",
+            "JEMAT","JEDHU","JINEN","JONAV","JINAV","JACID","FNC","FNP",
+            "FNA","FNO","COGFM"
+          ] %}
+          {% for f in fuerzas %}
+            <option value="{{ f }}" 
+              {% if registro.fuerza_jefatura and registro.fuerza_jefatura.strip() == f %}selected{% endif %}>
+              {{ f }}
+            </option>
+          {% endfor %}
+        </select>
+      </label>
+
+      <label>Comando / Dirección / Brigada / Flotilla / Grupo
+        <input name="comando_direccion_brigada_flotilla_grupo"
+               type="text"
+               value="{{ registro.comando_direccion_brigada_flotilla_grupo }}"
+               style="text-transform: uppercase;">
+      </label>
+
+      <label>Batallón / Buque / Unidad donde labora
+        <input name="batallon_buque_unidad_labora"
+               type="text"
+               value="{{ registro.batallon_buque_unidad_labora }}"
+               style="text-transform: uppercase;">
+      </label>
+
+    </div>
+  </div>
+
+  <!-- ACORDEÓN: Datos Personales -->
+  <div class="accordion">
+    <button type="button" class="accordion-btn">Datos Personales</button>
+    <div class="accordion-content">
+
+      <label>No. Cédula
+        <input name="no_cedula" type="text" value="{{ registro.no_cedula }}">
+      </label>
+
+      <label>Clase
+        <select name="clase">
+          <option value="">Seleccione clase</option>
+          {% set clases = ["O/F","S/O","I/M","C/V","FUENTE"] %}
+          {% for c in clases %}
+            <option value="{{ c }}" 
+              {% if registro.clase and registro.clase.strip() == c %}selected{% endif %}>
+              {{ c }}
+            </option>
+          {% endfor %}
+        </select>
+      </label>
+
+      <label>Grado
+        <select name="grado">
+          <option value="">Seleccione grado</option>
+          {% set grados = [
+            "ALM","GR","CN","CR","CF","TC","CC","MY","TN","CT","TF","TE","TK",
+            "ST","JT","SM","SJ","SP","S1","SV","S2","SS","S3","CP","MA1","CS",
+            "MA2","C3","DGIMP","IMP","IMAR"
+          ] %}
+          {% for g in grados %}
+            <option value="{{ g }}" 
+              {% if registro.grado and registro.grado.strip() == g %}selected{% endif %}>
+              {{ g }}
+            </option>
+          {% endfor %}
+        </select>
+      </label>
+
+      <label>Apellidos y Nombres
+        <input name="apellidos_nombre" type="text" value="{{ registro.apellidos_nombre }}"
+        style="text-transform: uppercase;">
+      </label>
+
+      <label>Cargo
+        <input name="cargo" type="text" value="{{ registro.cargo }}"
+        style="text-transform: uppercase;">
+      </label>
+
+    </div>
+  </div>
+
+  <!-- ACORDEÓN: Resultados -->
+  <div class="accordion">
+    <button type="button" class="accordion-btn">Resultados</button>
+    <div class="accordion-content">
+
+      <label>Resultados Obtenidos
+        <textarea name="resultados_obtenidos" rows="4">{{ registro.resultados_obtenidos }}</textarea>
+      </label>
+
+      <label>Tipo de Hallazgo
+        <textarea name="tipo_hallazgo" rows="3">{{ registro.tipo_hallazgo }}</textarea>
+      </label>
+
+      <label>Observación
+        <textarea name="observacion" rows="3">{{ registro.observacion }}</textarea>
+      </label>
+
+      <input type="hidden" name="id" value="{{ registro.id }}">
+
+    </div>
+  </div>
+
+  <button type="submit" id="btn-actualizar">Actualizar</button>
+
+  <p id="msg" class="mensaje"></p>
+
+</form>
+</div>
+
+<script>
+  const accordions = document.querySelectorAll(".accordion-btn");
+  accordions.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const content = btn.nextElementSibling;
+      content.style.display = content.style.display === "block" ? "none" : "block";
+    });
+  });
+</script>
+
+
+
+
+<script type="module" src="/app/static/js/formupdate.js"></script>
+
+
+
+
+{% endblock %}

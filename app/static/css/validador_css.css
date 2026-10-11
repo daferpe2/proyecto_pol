@@ -1,0 +1,191 @@
+/* ============================
+   CONTENEDOR GENERAL
+   ============================ */
+
+html {
+    scroll-padding-top: 20px;
+}
+
+.qc-wrapper {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+}
+
+/* ============================
+   BOTONES SUPERIORES
+   ============================ */
+.qc-top-nav {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.qc-nav-btn {
+    background: #1f6feb;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s ease;
+}
+
+.qc-nav-btn:hover {
+    background: #1158c7;
+}
+
+/* ============================
+   CONTENEDOR PRINCIPAL
+   ============================ */
+.qc-main {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 100%;
+}
+
+/* ============================
+   FORMULARIO (IZQUIERDA)
+   ============================ */
+#form-update-rdp {
+    width: 70%;
+    padding-right: 20px;
+}
+
+/* ============================
+   ACORDEONES
+   ============================ */
+.qc-acordeon {
+    background: #ffffff;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.qc-acordeon-title {
+    margin: 0;
+    padding: 14px 18px;
+    background: #f6f8fa;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    border-bottom: 1px solid #d0d7de;
+}
+
+.qc-acordeon-body {
+    display: none; /* Cerrado por defecto */
+    padding: 20px;
+    background: #ffffff;
+}
+
+/* ============================
+   GRID DE CAMPOS
+   ============================ */
+.qc-grid-2,
+.qc-grid-3 {
+    display: grid;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.qc-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.qc-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.qc-grid-2 label,
+.qc-grid-3 label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.qc-grid-2 input,
+.qc-grid-3 input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* ============================
+   TEXTAREAS
+   ============================ */
+.qc-textarea {
+    width: 100%;
+    min-height: 180px;
+    padding: 12px;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    font-size: 14px;
+    resize: vertical;
+}
+
+.qc-textarea-small {
+    width: 100%;
+    height: 120px;
+    padding: 10px;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    font-size: 14px;
+    resize: vertical;
+}
+
+/* ============================
+   PANEL FIJO DE VALIDACIÓN (DERECHA)
+   ============================ */
+.qc-panel-validacion {
+    width: 30%;
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+    background: #ffffff;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    padding: 20px;
+}
+
+.qc-panel-validacion h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* ============================
+   BOTÓN GUARDAR
+   ============================ */
+.qc-btn-guardar {
+    width: 100%;
+    background: #f0883e;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: background 0.2s ease;
+}
+
+.qc-btn-guardar:hover {
+    background: #d9772b;
+}
+
+/* ============================
+   ACORDEONES ABIERTOS (JS)
+   ============================ */
+.qc-acordeon.open .qc-acordeon-body {
+    display: block;
+}

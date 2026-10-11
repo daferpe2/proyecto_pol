@@ -1,0 +1,117 @@
+
+/* --- Tarjeta principal --- */
+.card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #e3e3e3;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+}
+
+/* --- Input de búsqueda --- */
+.search-container {
+    position: relative;
+    width: 100%;
+    display: block; /* ← IMPORTANTE */
+    box-sizing: border-box; /* ← IMPORTANTE */
+}
+
+.search-container input {
+    width: 100%;
+    padding: 12px 40px 12px 15px;
+    border: 1px solid #d0d0d0;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 15px;
+    transition: all 0.2s ease;
+}
+
+.search-container input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 4px rgba(0,123,255,0.4);
+}
+
+/* Icono de lupa */
+.search-container .icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #888;
+}
+
+/* --- Botón Buscar --- */
+.btn-primary {
+    background: #007bff;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background 0.2s ease;
+    margin-top: 10px;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+/* --- Botón Añadir --- */
+.btn-add {
+    background: #4a90e2;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.2s ease;
+}
+
+.btn-add:hover {
+    background: #357ab8;
+}
+
+/* --- Botón Generar Informe --- */
+.btn-big {
+    background: #007bff;
+    color: white;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    transition: background 0.2s ease;
+}
+
+.btn-big:hover {
+    background: #0056b3;
+}
+
+/* --- Tabla de resultados --- */
+.tabla-resultados {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.tabla-resultados th {
+    background: #f5f5f5;
+    padding: 10px;
+    border-bottom: 1px solid #e3e3e3;
+    text-align: left;
+}
+
+.tabla-resultados td {
+    padding: 10px;
+    border-bottom: 1px solid #e3e3e3;
+}
+
+.tabla-resultados tr:hover {
+    background: #f9f9f9;
+}

@@ -1,0 +1,374 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="content">
+    <!-- Botones superiores -->
+    <nav class="qc-top-nav">
+        <button class="qc-nav-btn" data-target="#acordeon-proceso">Datos del proceso RDP</button>
+        <button class="qc-nav-btn" data-target="#acordeon-unidad">Unidad</button>
+        <button class="qc-nav-btn" data-target="#acordeon-examen">Datos Personales</button>
+        <button class="qc-nav-btn" data-target="#acordeon-resultados">Resultados Evaluación</button>
+        <button class="qc-nav-btn" data-target="#acordeon-info">Consumo Sustancia</button>
+        
+    </nav>
+  <form id="form-rdp-up" class="form-container"  onsubmit="handleSubmitRdp(event)">
+
+    <h2 class="titulo">REGISTRO RDP — POLIGRAFISTAS</h2>
+
+    <label>
+      Estado
+      <select name="estado" id="estado">
+        <option>pendiente</option>
+        <option>aprobado</option>
+        <option>rechazado</option>
+      </select>
+      <label>Comentarios</label>
+      <textarea name="comentarios" id="comentarios">Escriba su comentario</textarea>
+         <!-- ===================== ACORDEÓN 1 ===================== -->
+    <div class="accordion">
+      <button type="button" id="acordeon-proceso" class="accordion-btn">Datos del Proceso RDP</button>
+      <div class="accordion-content">
+
+        <label>Fecha Evaluación
+          <input name="fecha_evaluacion" type="date" value="{{ registro.fecha_evaluacion }}" required>
+        </label>
+
+        <label>Regional
+          <select name="regional" required>
+            <option value="{{ registro.regional }}">{{ registro.regional }}</option>
+            <option disabled>Seleccione</option>
+            <option>DEPEC</option>
+            <option>RCICA</option>
+            <option>RCIPA</option>
+            <option>RCIAM</option>
+            <option>RCIOR</option>
+          </select>
+        </label>
+
+        <label>Categoría
+          <input type="text" name="categoria" value="{{ registro.categoria }}"
+          autocomplete="additional-name" style="text-transform: uppercase;">
+        </label>
+
+        <label>Proceso
+          <input type="text" name="proceso" value="{{ registro.proceso }}"
+          style="text-transform: uppercase;"
+          autocomplete="additional-name">
+        </label>
+
+        <label>Complemento Proceso
+          <input name="complemento_proceso" value="{{ registro.complemento_proceso }}" type="text" autocomplete="on">
+        </label>
+
+        <label>Temas Examinados
+          <select name="temas_examinados" id="temas_examinados">
+            <option value="{{ registro.temas_examinados }}">{{ registro.temas_examinados }}</option>
+            <option disabled>Seleccione</option>
+            <option>SUMINISTRO DE INFORMACION, VINCULOS, ALTERACION DE FUNCIONES</option>
+            <option>SUMINISTRO DE INFORMACION, VINCULOS, IRREGULARIDADES CON MATERIAL RESERVADO</option>
+            <option>SUMINISTRO DE INFORMACION, VINCULOS, PARTICIPACION EN ACTIVIDADES ILEGALES</option>
+            <option>SUMINISTRO DE INFORMACION, BENEFICIO POR CORRUPCION, OCULTAMIENTO DE CORRUPCION</option>
+            <option>SUMINISTRO DE INFORMACION, VINCULOS, PLANES</option>
+            <option>CONSUMO HABITUAL, VINCULOS, PLANES</option>
+            <option>SUMINISTRO DE INFORMACION, VINCULOS, ALTERACION DE FUNCIONES, CONSUMO HABITUAL</option>
+            <option>SUMINISTRO DE INFORMACION, VINCULOS, PARTICIPACION EN DELITOS, PLANES DE CAUSAR DAÑO</option>
+            <option>PLANES DE CAUSAR DAÑO, VINCULOS, PARTICIPACION EN DELITOS, CONSUMO HABITUAL</option>
+            <option>SUMINISTRO DE INFORMACION, VINCULOS, SABOTAJE, DELITOS</option>
+          </select>
+        </label>
+
+        <label>Técnica
+          <select name="tecnica" required>
+            <option value="{{ registro.tecnica }}">{{ registro.tecnica }}</option>
+            <option disabled>Seleccione técnica</option>
+            <option>AFMGQT</option>
+            <option>ZCT FEDERAL</option>
+            <option>BIZONA</option>
+            <option>UTAH</option>
+            <option>DLST</option>
+          </select>
+        </label>
+
+      </div>
+    </div>
+
+    <!-- ===================== ACORDEÓN 2 ===================== -->
+    <div class="accordion">
+      <button type="button" id="acordeon-unidad" class="accordion-btn">Unidad / Organización</button>
+      <div class="accordion-content">
+
+        <label>Fuerza / Jefatura
+          <input type="text" name="fuerza_jefatura"
+          value="{{ registro.fuerza_jefatura }}"
+          style="text-transform: uppercase;">
+        </label>
+
+        <label>Comando / Dirección / Brigada / Flotilla / Grupo
+          <input type="text" value="{{ registro. comando_direccion_brigada_flotilla_grupo}}"
+          name="comando_direccion_brigada_flotilla_grupo"
+          style="text-transform: uppercase;">
+        </label>
+
+        <label>Batallón / Buque / Unidad donde labora
+          <input type="text"
+            value="{{ registro.batallon_buque_unidad_labora }}"
+            name="batallon_buque_unidad_labora"
+            id="batallon_buque_unidad_labora"
+            autocomplete="additional-name"
+            style="text-transform: uppercase;">
+        </label>
+
+      </div>
+    </div>
+
+    <!-- ===================== ACORDEÓN 3 ===================== -->
+    <div class="accordion">
+      <button type="button" id="acordeon-examen" class="accordion-btn">Datos Personales del Evaluado</button>
+      <div class="accordion-content">
+
+        <label>No. Cédula
+          <input name="no_cedula" type="text" value="{{ registro.no_cedula }}"
+            minlength="6" maxlength="10" pattern="[0-9]{7,10}" required>
+        </label>
+
+        <label>Clase
+            <input type="text" value="{{ registro.clase }}"
+            style="text-transform: uppercase;" autocomplete="additional-name">
+        </label>
+
+        <label>Grado
+          <input type="text" name="grado"
+          value="{{ registro.grado }}" style="text-transform: uppercase;">
+        </label>
+
+        <label>Apellidos y Nombres
+          <input name="apellidos_nombres" value="{{ registro.apellidos_nombres }}"
+            type="text" required style="text-transform: uppercase;">
+        </label>
+
+        <label>Cargo
+          <input name="cargo" value="{{ registro.cargo }}"
+            type="text" autocomplete="on" required style="text-transform: uppercase;">
+        </label>
+
+      </div>
+    </div>
+
+    <!-- ===================== ACORDEÓN 4 ===================== -->
+    <div class="accordion">
+      <button type="button" id="acordeon-resultados" class="accordion-btn">Resultados de la Evaluación</button>
+      <div class="accordion-content">
+
+        <label>Resultado EPP
+          <select name="resultado_epp" required>
+            <option value="{{ registro.resultado_epp }}">{{ registro.resultado_epp }}</option>
+            <option disabled>Seleccione resultado</option>
+            <option>NSR</option>
+            <option>SR</option>
+            <option>NDI</option>
+            <option>DI</option>
+            <option>INC</option>
+            <option>N.O.</option>
+            <option>NPE</option>
+          </select>
+        </label>
+
+        <label>Tema SR/DI
+          <select name="tema_sr_di" id="tema_sr_di">
+            <option value="{{ registro.tema_sr_di }}">{{ registro.tema_sr_di }}</option>
+            <option disabled>Seleccione</option>
+            <option>NO</option>
+            <option>SI</option>
+          </select>
+        </label>
+
+        <label>Información Obtenida
+          <textarea name="informacion_obtenida">{{ registro.informacion_obtenida }}</textarea>
+        </label>
+
+        <label>Información Relevante
+          <select name="informacion_relevante" id="informacion_relevante">
+            <option value="{{ registro.informacion_relevante }}">{{ registro.informacion_relevante }}</option>
+            <option disabled>Seleccione</option>
+            <option>NO</option>
+            <option>SI</option>
+          </select>
+        </label>
+
+        <label>Observaciones
+          <textarea name="observaciones" required>{{ registro.observaciones }}</textarea>
+        </label>
+
+      </div>
+    </div>
+
+    <!-- ===================== ACORDEÓN 5 ===================== -->
+    <div class="accordion">
+      <button type="button" id="acordeon-info" class="accordion-btn">Consumo de Sustancias / Pruebas Adicionales</button>
+      <div class="accordion-content">
+
+        <label>Refiere a Alguien
+          <select name="refiere_alguien">
+            <option value="{{ registro.refiere_alguien }}">{{ registro.refiere_alguien }}</option>
+            <option disabled>Seleccione</option>
+            <option>SI</option>
+            <option>NO</option>
+          </select>
+        </label>
+
+          <label>¿Se realizó test de consumo?</label>
+          <div class="radio-group">
+
+            <label>
+              <input type="radio" name="se_realizo_test_consumo" value="true"
+                {% if registro.se_realizo_test_consumo in [True, "true", 1, "1"] %}checked{% endif %}>
+              Sí
+            </label>
+
+            <label>
+              <input type="radio" name="se_realizo_test_consumo" value="false"
+                {% if registro.se_realizo_test_consumo in [False, "false", 0, "0"] %}checked{% endif %}>
+              No
+            </label>
+
+          </div>
+
+        </label>
+
+        <label>Resultado TMD
+          <select name="resultado_tmd" id="resultado_tmd">
+            <option value="{{ registro.resultado_tmd }}">{{ registro.resultado_tmd }}</option>
+            <option disabled>Seleccione</option>
+            <option>SI</option>
+            <option>NO</option>
+          </select>
+        </label>
+
+        <label>Tipo de Sustancia
+          <select name="tipo_sustancia" id="tipo_sustancia">
+            <option value="{{ registro.tipo_sustancia }}">{{ registro.tipo_sustancia }}</option>
+            <option disabled>Seleccione</option>
+            <option>COC</option>
+            <option>THC</option>
+            <option>AMP</option>
+            <option>BZO</option>
+            <option>OPI</option>
+          </select>
+        </label>
+
+
+
+        <input type="hidden" name="usuario" value="{{ user.id }}">
+  
+        <label>
+          Ain
+          <input type="text" name="ain" value="{{ registro.ain }}">
+        </label>
+
+        </label>
+
+
+        <input type="hidden" name="id" value="{{ registro.id }}">
+
+        </div>
+      </div>
+
+      <button type="submit">Actualizar Registro RDP</button>
+    </div>
+
+
+  </form>
+
+</div>
+
+
+<script src="/app/static/js/unidades_form_categorias_update.js"></script>
+<script type="module" src="/app/static/js/formupdate_rdp.js"></script>
+<script src="/app/static/js/unidades_form_esp_update.js"></script>
+
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+
+    const radios = document.querySelectorAll("input[name='se_realizo_test_consumo']");
+    const resultadoTmd = document.getElementById("resultado_tmd");
+    const tipoSustancia = document.getElementById("tipo_sustancia");
+
+    function actualizarEstadoTest() {
+      const seleccionado = document.querySelector("input[name='se_realizo_test_consumo']:checked");
+      if (!seleccionado) return;
+
+      if (seleccionado.value === "true") {
+        resultadoTmd.disabled = false;
+        tipoSustancia.disabled = false;
+
+        resultadoTmd.required = true;
+        tipoSustancia.required = true;
+
+      } else {
+        resultadoTmd.disabled = true;
+        tipoSustancia.disabled = true;
+
+        resultadoTmd.required = false;
+        tipoSustancia.required = false;
+
+        resultadoTmd.value = "";
+        tipoSustancia.value = "";
+      }
+    }
+
+    // Ejecutar al cargar el formulario (actualización)
+    actualizarEstadoTest();
+
+    // Ejecutar cuando el usuario cambia la selección
+    radios.forEach(r => r.addEventListener("change", actualizarEstadoTest));
+  });
+
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  /* 1. FUNCIONALIDAD ORIGINAL DEL ACORDEÓN (TU SCRIPT) */
+  const accordions = document.querySelectorAll(".accordion-btn");
+
+  accordions.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const content = btn.nextElementSibling;
+      const isVisible = content.style.display === "block";
+      content.style.display = isVisible ? "none" : "block";
+    });
+  });
+
+  /* 2. FUNCIONALIDAD DE LOS BOTONES DEL NAV */
+  const navButtons = document.querySelectorAll(".qc-nav-btn");
+
+  navButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+
+      const targetId = btn.getAttribute("data-target"); // ej: #acordeon-proceso
+      const targetAccordionBtn = document.querySelector(targetId);
+      if (!targetAccordionBtn) return;
+
+      // Cerrar todos los acordeones
+      document.querySelectorAll(".accordion-content").forEach(content => {
+        content.style.display = "none";
+      });
+
+      // Abrir el acordeón seleccionado
+      const content = targetAccordionBtn.nextElementSibling;
+      content.style.display = "block";
+
+      // Scroll suave hacia el acordeón
+      targetAccordionBtn.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
+});
+</script>
+
+
+
+{% endblock %}

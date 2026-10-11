@@ -1,0 +1,77 @@
+.form-container {
+    max-width: auto;
+    margin: auto;
+    background: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #ccc;
+    font-family: Arial, sans-serif;
+  }
+.titulo {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #2c3e50;
+  }
+
+  /* Acordeones */
+.accordion {
+    margin-bottom: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #ccc;
+  }
+.accordion-btn {
+    width: 100%;
+    text-align: left;
+    padding: 12px;
+    background: #161b22;
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+  }
+.accordion-btn:hover {
+    background: #0056b3;
+  }
+.accordion-content {
+    padding: 15px;
+    display: none;
+    background: #f9f9f9;
+  }
+
+.accordion-content { display:none; }
+
+.accordion.open .accordion-content { display:block; }
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+  }
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+button[type="submit"]:hover {
+    background: #0056b3;
+  }
+.mensaje {
+    margin-top: 10px;
+    font-weight: bold;
+    text-align: center;
+  }
+

@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+{% block content %}
+ 
+<style>
+.accordion-content--row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.accordion-content--col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+</style>
+
+
+ <!-- Main content -->
+<div class="content">
+<form id="form-resultados-esp" class="form-container" onsubmit="handleSubmitRdp(event)">
+
+  <h2 class="titulo">RESULTADOS OBTENIDOS ESP</h2>
+
+  <!-- ACORDEÓN: Datos del Proceso -->
+  <div class="accordion">
+    <button type="button" class="accordion-btn">Datos del Proceso</button>
+    <div class="accordion-content">
+
+      <label>Fecha ESP
+        <input name="fecha_asp" type="date" required>
+      </label>
+
+      <label>Proceso
+        <select name="proceso" required>
+          <option value="">Seleccione proceso</option>
+          <option>INGRESO JINAV</option>
+          <option>CAMBIO DE ESPECIALIDAD</option>
+          <option>ASCENSOS</option>
+          <option>PD (R)</option>
+          <option>PASANTES Y PD</option>
+          <option>CERTIFICACION OTAN</option>
+        </select>
+      </label>
+
+      <label>Fuerza / Jefatura
+        <select name="fuerza_jefatura" required>
+          <option value="">Seleccione fuerza/jefatura</option>
+        </select>
+      </label>
+
+      <label>Comando / Dirección / Brigada / Flotilla / Grupo
+        <select name="comando_direccion_brigada_flotilla_grupo">
+          <option value="">Seleccione</option>
+        </select>
+      </label>
+
+      <label>Batallón / Buque / Unidad donde labora
+        <input type="text" name="batallon_buque_unidad_labora" 
+        style="text-transform: uppercase;">
+      </label>
+
+    </div>
+  </div>
+
+  <!-- ACORDEÓN: Datos Personales -->
+  <div class="accordion">
+    <button type="button" class="accordion-btn">Datos Personales</button>
+    <div class="accordion-content">
+
+      <label>No. Cédula
+        <input name="no_cedula" type="text" required>
+      </label>
+
+      <label>Clase
+        <select name="clase" required>
+          <option value="">Seleccione</option>
+        </select>
+      </label>
+
+      <label>Grado
+        <select name="grado" required>
+          <option value="">Seleccione</option>
+        </select>
+      </label>
+
+      <label>Apellidos y Nombres
+        <input name="apellidos_nombre" type="text" required style="text-transform: uppercase;">
+      </label>
+
+      <label>Cargo
+        <input name="cargo" type="text" style="text-transform: uppercase;">
+      </label>
+
+    </div>
+  </div>
+
+  <!-- ACORDEÓN: Resultados -->
+  <div class="accordion">
+    <button type="button" class="accordion-btn">Resultados</button>
+    <div class="accordion-content">
+
+      <!-- Banner de advertencia -->
+      <div id="banner-corrupto" 
+          style="display:none; 
+                  background-color:#ffe4b3; 
+                  border-left:5px solid #ff9900; 
+                  padding:10px; 
+                  margin-bottom:15px;">
+        ⚠️ El contenido guardado no pudo ser interpretado correctamente.
+        Se han dejado los campos vacíos para que puedas corregirlos manualmente.
+      </div>
+
+      <!-- FILA 1 -->
+      <div class="accordion-content--row">
+        <label class="accordion-content--col">
+          Académico
+          <select name="acad" class="resultado-select">
+            <option value="">Seleccione</option>
+            <option value="SH">SH</option>
+            <option value="CH">CH</option>
+            <option value="CHm">CHm</option>
+            <option value="N.E.">N.E.</option>
+          </select>
+        </label>
+
+        <label class="accordion-content--col">
+          Laboral
+          <select name="lab" class="resultado-select">
+            <option value="">Seleccione</option>
+            <option value="SH">SH</option>
+            <option value="CH">CH</option>
+            <option value="CHm">CHm</option>
+            <option value="N.E.">N.E.</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- FILA 2 -->
+      <div class="accordion-content--row">
+        <label class="accordion-content--col">
+          Listas Restrictivas
+          <select name="listas" class="resultado-select">
+            <option value="">Seleccione</option>
+            <option value="SH">SH</option>
+            <option value="CH">CH</option>
+            <option value="CHm">CHm</option>
+            <option value="N.E.">N.E.</option>
+          </select>
+        </label>
+
+        <label class="accordion-content--col">
+          Antecedentes (Bases / Adversos)
+          <select name="antecedentes" class="resultado-select">
+            <option value="">Seleccione</option>
+            <option value="SH">SH</option>
+            <option value="CH">CH</option>
+            <option value="CHm">CHm</option>
+            <option value="N.E.">N.E.</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- FILA 3 -->
+      <div class="accordion-content--row">
+        <label class="accordion-content--col">
+          Núcleo Familiar
+          <select name="nucleo" class="resultado-select">
+            <option value="">Seleccione</option>
+            <option value="SH">SH</option>
+            <option value="CH">CH</option>
+            <option value="CHm">CHm</option>
+            <option value="N.E.">N.E.</option>
+          </select>
+        </label>
+
+        <label class="accordion-content--col">
+          Visita de Seguridad
+          <select name="visita" class="resultado-select">
+            <option value="">Seleccione</option>
+            <option value="SH">SH</option>
+            <option value="CH">CH</option>
+            <option value="CHm">CHm</option>
+            <option value="N.E.">N.E.</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- FILA 4 -->
+      <div class="accordion-content--row">
+        <label class="accordion-content--col">
+          Salud
+          <select name="salud" class="resultado-select">
+            <option value="">Seleccione</option>
+            <option value="SH">SH</option>
+            <option value="CH">CH</option>
+            <option value="CHm">CHm</option>
+            <option value="N.E.">N.E.</option>
+          </select>
+        </label>
+
+        <label class="accordion-content--col">
+          Otro
+          <select name="otro" class="resultado-select">
+            <option value="">Seleccione</option>
+            <option value="SH">SH</option>
+            <option value="CH">CH</option>
+            <option value="CHm">CHm</option>
+            <option value="N.E.">N.E.</option>
+          </select>
+          <input type="text" name="otro_texto" placeholder="Texto adicional (opcional)">
+        </label>
+      </div>
+
+      <!-- Textarea generado automáticamente -->
+      <label>Resultados Obtenidos (generado automáticamente)
+        <textarea name="resultados_obtenidos" 
+                  id="resultados_obtenidos" 
+                  rows="8" 
+                  readonly></textarea>
+      </label>
+
+      <label>Tipo de Hallazgo
+        <textarea name="tipo_hallazgo" rows="3"></textarea>
+      </label>
+
+      <label>Observación
+        <textarea name="observacion" rows="3"></textarea>
+      </label>
+
+      <input type="number" name="lista_esp_id" value="{{ user.id }}" hidden>
+      <input type="hidden" name="regional" id="regional" value="{{ user.regional}}">
+
+    </div>
+  </div>
+
+
+  <button type="submit" id="btn-guardar">Guardar</button>
+  <p id="msg" class="mensaje"></p>
+
+</form>
+
+
+<script type="module" src="/app/static/js/form.js"></script>
+
+<script src="/app/static/js/unidades_form_esp.js"></script>
+
+<script src="/app/static/js/grado_clase.js"></script>
+
+<script src="/app/static/js/resultados_esp.js"></script>
+
+
+<script>
+  const accordions = document.querySelectorAll(".accordion-btn");
+  accordions.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const content = btn.nextElementSibling;
+      content.style.display = content.style.display === "block" ? "none" : "block";
+    });
+  });
+</script>
+
+
+</div>
+
+
+
+{% endblock %}

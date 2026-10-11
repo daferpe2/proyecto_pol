@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card" style="width: 1050px;">
+    <h2>Buscador de Resultados Poligráficos</h2>
+
+    <form method="POST" action="/resultados-poligraficos/buscar">
+        <div class="search-container">
+            <input type="text" name="texto_busqueda" value="{{ texto_busqueda }}" placeholder="Buscar por nombre o cédula..." required>
+        </div>
+
+        <button type="submit" class="btn-primary">Buscar</button>
+    </form>
+
+    <section id="buscador-csv" class="panel">
+        <h3>Buscador por Archivo CSV ESP</h3>
+
+        <!-- ========================= -->
+        <!--  FORMULARIO ESP (NO TOCADO) -->
+        <!-- ========================= -->
+        <form id="form-upload" enctype="multipart/form-data">
+            <label>Seleccione archivo CSV ESP:</label>
+            <input type="file" name="file" accept=".csv" required>
+            <button type="submit">Subir y procesar ESP</button>
+        </form>
+
+        <div id="job-status" style="margin-top: 15px; display:none;">
+            <p id="job-message"></p>
+            <div id="spinner" style="display:none;">Procesando...</div>
+        </div>
+
+        <button id="btn-descargar" style="display:none;">
+            Descargar archivo CSV SDP
+        </button>
+
+        <!-- ========================= -->
+        <!--  FORMULARIO RDP (ACTUALIZADO) -->
+        <!-- ========================= -->
+        <section style="margin-top: 25px;">
+            <h3>Buscador por Archivo CSV RDP</h3>
+
+            <form id="form-upload-rdp" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label">Seleccione archivo CSV RDP:</label>
+                    <input type="file" name="file" class="form-control" accept=".csv" required>
+                </div>
+
+                <button type="submit" class="btn btn-success">
+                    Iniciar búsqueda masiva RDP
+                </button>
+            </form>
+
+            <div id="job-status-rdp" style="margin-top: 15px; display:none;">
+                <p id="job-message-rdp"></p>
+                <div id="spinner-rdp" style="display:none;">Procesando...</div>
+            </div>
+
+            <button id="btn-descargar-rdp" style="display:none;">
+                Descargar archivo CSV SDP
+            </button> 
+        </section>
+    </section>
+</div>
+
+{% if resultados_esp %}
+<div class="card" style="width: 1020px; margin-top: 20px;">
+    <h3>Resultados ESP encontrados</h3>
+<div class="card" style="width: auto;">
+    <h3>Resultados encontrados</h3>
+
+    <table class="tabla-resultados">
+        <thead>
+            <tr>
+                <th>Fecha ESP</th>
+                <th>Nombre</th>
+                <th>Cédula</th>
+                <th>Grado</th>
+                <th>Cargo</th>
+                <th>Resultado</th>
+                <th>Agregar</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for r in resultados_esp %}
+            <tr>
+                <td>{{ r.fecha_asp }}</td>
+                <td>{{ r.apellidos_nombre }}</td>
+                <td>{{ r.no_cedula }}</td>
+                <td>{{ r.grado }}</td>
+                <td>{{ r.cargo }}</td>
+                <td>{{ r.comando_direccion_brigada_flotilla_grupo }}</td>
+                <td>{{ r.resultados_obtenidos }}</td>
+                <td>
+                    <button class="btn-secondary" onclick="agregarAInforme({{ r.id }})">
+                        Añadir
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button class="btn-big" onclick="generarInforme()">
+        Generar Informe Word
+    </button>
+</div>
+{% endif %}
+
+{% if resultados_rdp %}
+<div class="card" style="width: 1020px; margin-top: 20px;">
+    <h3>Resultados RDP encontrados</h3>
+    <table class="tabla-resultados">
+        <thead>
+            <tr>
+                <th>Fecha RDP</th>
+                <th>Nombre</th>
+                <th>Cédula</th>
+                <th>Grado</th>
+                <th>Cargo</th>
+                <th>Categoria</th>
+                <th>Unidad</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for r_d in resultados_rdp %}
+            <tr>
+                <td>{{ r_d.fecha_evaluacion }}</td>
+                <td>{{ r_d.apellidos_nombres }}</td>
+                <td>{{ r_d.no_cedula }}</td>
+                <td>{{ r_d.grado }}</td>
+                <td>{{ r_d.cargo }}</td>
+                <td>{{ r_d.categoria }}</td>
+                <td>{{ r_d.comando_direccion_brigada_flotilla_grupo }}</td>
+                <td>
+                    <button class="btn-secondary" onclick="agregarAInforme({{ r_d.id }})">
+                        Añadir
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button class="btn-big" onclick="generarInformeRdp()">
+        Generar Informe Word
+    </button>
+</div>
+{% endif %}
+
+
+<script src="/app/static/js/buscador.js"></script>
+
+<script src="/app/static/js/buscador_cvs_unificado.js"></script>
+
+
+{% endblock %}

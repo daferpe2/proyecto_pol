@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Bienvenido</h1>
+<h4>Conteo de RDP <small>Fecha: {{ fecha_consulta.strftime("%Y/%m/%d") }}</small></h4>
+
+{% if user.rol in ["QC","QC_S","SUPER_ADMIN","JEFE","ANALISTA"] %}
+<!-- <div class="stats"> -->
+<div class="content">
+        <div class="card">
+            <h2> <a href="/tabla-poligraf/lista_rdp_regional" style="text-decoration: none; color: black;">Pendientes</a></h2>
+            <p>{{ pendientes }}</p>
+        </div>
+
+        <div class="card">
+            <h2> Aprobadas </h2>
+            <p>{{ aprobados }}</p>
+        </div>
+
+        <div class="card">
+            <h2>Conteo semanal</h2>
+            <p> {{ conteo_semanal }} </p>
+        </div>
+</div>
+{% endif %}
+{% endblock %}

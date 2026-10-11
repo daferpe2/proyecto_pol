@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- <html>
+<head>
+    <title>Carga Masiva</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .container { max-width: 400px; margin: auto; }
+        label { display: block; margin-top: 15px; }
+        button { margin-top: 20px; padding: 10px; width: 100%; }
+        #resultado { margin-top: 20px; background: #f5f5f5; padding: 10px; }
+    </style>
+</head> -->
+
+<body>
+    <div class="container-upload">
+        <h2>Carga Masiva</h2>
+
+        <form id="form-carga">
+            <label>
+                Seleccione tabla:
+                <select id="tabla" required>
+                    <option value="">-- Seleccione --</option>
+                    <option value="poli">RDP</option>
+                    <option value="espf">ESPF</option>
+                </select>
+            </label>
+
+            <label>
+                Archivo Excel:
+                <input type="file" id="archivo" accept=".xlsx" required />
+            </label>
+
+            <button type="submit">Subir archivo</button>
+            <input type="number" name="usuario_id" id="usuario_id" value="{{ user.id }}" hidden>
+        </form>
+
+        <div id="resultado"></div>
+    </div>
+
+<script>
+  const form = document.getElementById("form-carga");
+  const resultado = document.getElementById("resultado");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const tabla = document.getElementById("tabla").value;
+    const archivo = document.getElementById("archivo").files[0];
+    const usuarioId = document.getElementById("usuario_id").value;
+
+    if (!tabla || !archivo || !usuarioId) {
+      alert("Debe seleccionar tabla, archivo y tener usuario válido.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("archivo", archivo);
+
+    // 🔥 URL EXACTA QUE NECESITAS:
+    const url = `/carga/upload/${tabla}?usuario_id=${usuarioId}`;
+
+    const response = await fetch(url, {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await response.json();
+
+    resultado.innerHTML = `
+      <h3>Resultado</h3>
+      <p>Total filas: ${data.total_filas}</p>
+      <p>Insertadas: ${data.filas_insertadas}</p>
+      <p>Errores: ${data.filas_con_error}</p>
+    `;
+  });
+</script>
+
+
+</body>
+</html>
+
+
+{% endblock %}

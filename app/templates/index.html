@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Bienvenido {{ user.nombre_apellido }}</h1>
+<h2> A Tridente</h2>
+<small>Hoy es {{ date.strftime("%Y/%m/%d") }}</small>
+
+<!-- <div class="stats"> -->
+<!-- <div class="content">
+        <div class="card">
+            <h2>{{ new_messages }}</h2>
+            <p>New messages</p>
+        </div>
+
+        <div class="card">
+            <h2>{{ products_sold }}</h2>
+            <p>Products sold</p>
+        </div>
+
+        <div class="card">
+            <h2>{{ images_deleted }}</h2>
+            <p>Images deleted</p>
+        </div>
+</div> -->
+
+{% endblock %}

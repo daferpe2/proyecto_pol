@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">Listado de Resultados RDP</h2>
+
+    <!-- Buscador -->
+    <form method="get" action="/tabla-poligraf/lista_rdp_regional_f" class="mb-4 d-flex">
+        <input type="text" name="q" class="form-control me-2"
+            placeholder="Buscar por nombre o cédula..."
+            value="{{ q }}">
+        <button class="btn btn-primary">Buscar</button>
+    </form>
+
+    <!-- CONTENEDOR REAL PARA PAGINACIÓN -->
+    <div id="rdp-container">
+
+        {% for item in registros %}
+        <div class="card-poligrafico">
+            
+            <div class="card-header">
+                <h3>{{ item.apellidos_nombres }}</h3>
+                <span class="badge bg-secondary">{{ item.estado.name }}</span>
+            </div>
+
+            <div class="card-body">
+                <p><strong>Fecha Examen:</strong> {{ item.fecha_evaluacion }}</p>
+                <!-- <p><strong>Apellidos y Nombres:</strong> {{ item.apellidos_nombres }}</p> -->
+                <p><strong>Cédula:</strong> {{ item.no_cedula }}</p>
+                <p><strong>Cargo:</strong> {{ item.cargo }}</p>
+                <p><strong>Unidad:</strong> {{ item.batallon_buque_unidad_labora }}</p>
+                <p><strong>Reginal:</strong> {{ item.regional }}</p>
+            </div>
+
+            <div class="card-actions">
+            {% if user.rol in ["QC"] %}
+                <form action="/tabla-poligraf/editar_rdp_regional/{{ item.id }}" method="get">
+                    <button class="btn btn-edit">Editar</button>
+                </form>
+            
+                <form action="/tabla-poligraf/borrar_poli_regional/{{ item.id }}" method="post"
+                    onsubmit="return confirm('¿Desea eliminar este registro?');">
+                    <button class="btn btn-delete">Eliminar</button>
+                </form>
+
+
+            {% endif %}
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div> <!-- FIN DEL CONTENEDOR -->
+
+</div> <!-- FIN DEL CONTAINER PRINCIPAL -->
+
+<!-- PAGINACIÓN -->
+<div class="pagination mt-4 text-center">
+    {% if prev_cursor %}
+        <button class="btn btn-primary" id="btn-prev" data-cursor="{{ prev_cursor }}">
+            Anterior
+        </button>
+    {% endif %}
+
+    {% if next_cursor %}
+        <button class="btn btn-primary" id="btn-next" data-cursor="{{ next_cursor }}">
+            Siguiente
+        </button>
+    {% endif %}
+</div>
+
+<script src="/app/static/js/rdp_paginacion.js"></script>
+
+{% endblock %}

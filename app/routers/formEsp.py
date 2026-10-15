@@ -1,6 +1,6 @@
 import base64
 import json
-from datetime import datetime
+from datetime import UTC, datetime
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from fastapi import APIRouter, Depends, HTTPException, Request, status
@@ -250,6 +250,7 @@ async def post_update_resultados_esp(
 
     decrypted_json = decrypted_bytes.decode("utf-8")
     fields = json.loads(decrypted_json)
+
     fields["texto_busqueda"] = f"{fields['no_cedula']} {fields['apellidos_nombre']}"
 
     # 2. Convertir a modelo de update

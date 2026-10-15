@@ -26,7 +26,7 @@ body {
 
 /* Collapse button */
 .collapse-btn {
-    background: #ff7f32;
+    background:#34506e;
     border: none;
     color: white;
     padding: 10px;
@@ -261,4 +261,37 @@ body {
     margin: auto;
     width: 100%;
     border: #007bff;
+}
+
+
+/* Estado pendiente */
+.estado-pendiente {
+    background-color: #f1c40f;   /* amarillo */
+    color: #000;
+}
+
+/* Estado aprobado */
+.estado-aprobado {
+    background-color: #2ecc71;   /* verde */
+    color: #fff;
+}
+
+/* Estado rechazado */
+.estado-rechazado {
+    background-color: #e74c3c;   /* rojo */
+    color: #fff;
+}
+
+
+.alerta-req {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+.oculto {
+  display: none;
 }

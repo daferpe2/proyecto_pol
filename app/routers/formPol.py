@@ -317,7 +317,7 @@ async def eliminar_regional(registro_id: int, session: SessionDep):
     registro = await delete_registro(session, registro_id)
     if not registro:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Registro no encontrado")
-    return RedirectResponse("/tabla-poligraf/lista_rdp_regional",status_code=status.HTTP_303_SEE_OTHER)
+    return RedirectResponse("/tabla-poligraf/lista_rdp_regional_f",status_code=status.HTTP_303_SEE_OTHER)
 
 
 

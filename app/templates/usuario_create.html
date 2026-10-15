@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
+{% if user.rol in ["SUPER_ADMIN"] %}
 <div class="content">
 
   <form id="form-user-create" class="form-container" onsubmit="handleSubmitRdp(event)"
@@ -28,6 +29,7 @@
             <option value="REGISTRO">REGISTRO</option>
             <option value="QC">QC</option>
             <option value="QC_S">QC_S</option>
+            <option value="COORDINADOR">COORDINADOR</option>
             <option value="ANALISTA">ANALISTA</option>
             <option value="SUPER_ADMIN">SUPER_ADMIN</option>
             <option value="JEFE">JEFE</option>
@@ -87,6 +89,7 @@
   </form>
 
 </div>
+{% endif %}
 
 <script type="module" src="/app/static/js/form_create_user.js"></script>
 

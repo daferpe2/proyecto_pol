@@ -1,6 +1,6 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
-from sqlmodel import and_, func, select # noqa: N999
+from sqlmodel import and_, func, or_, select # noqa: N999
 
 from db import SessionDep
 from models import (
@@ -63,12 +63,14 @@ async def get_registros(
     offset: int = 0
 ):
     query = (
-        select(PdpPoligrafistasTabla).where(PdpPoligrafistasTabla.estado==EstadosValidacion.PENDIENTE)
-        .order_by(PdpPoligrafistasTabla.id.desc())
+        select(PdpPoligrafistasTabla)
+        .where(
+            or_(PdpPoligrafistasTabla.estado == EstadosValidacion.PENDIENTE,
+                    PdpPoligrafistasTabla.estado == EstadosValidacion.RECHAZADO)
+        ).order_by(PdpPoligrafistasTabla.id.desc())
         .limit(limit)
         .offset(offset)
     )
-
 
     return session.exec(query).all()
 
@@ -80,10 +82,16 @@ async def get_registros_regional(
     offset: int = 0
 ):
     query = (
-        select(PdpPoligrafistasTabla).where(and_(
-            PdpPoligrafistasTabla.estado==EstadosValidacion.PENDIENTE),
-            PdpPoligrafistasTabla.regional==regional
-        )            
+        select(PdpPoligrafistasTabla)
+        .where(
+            and_(
+                or_(
+                    PdpPoligrafistasTabla.estado == EstadosValidacion.PENDIENTE,
+                    PdpPoligrafistasTabla.estado == EstadosValidacion.RECHAZADO
+                ),
+                PdpPoligrafistasTabla.regional == regional
+            )
+        )
         .order_by(PdpPoligrafistasTabla.id.desc())
         .limit(limit)
         .offset(offset)
@@ -200,18 +208,22 @@ async def  get_count_rdp_validacion(
         PdpPoligrafistasTabla.estado == EstadosValidacion.APROBADO)
     ).one()
 
-    return (conteo_pendientes,conteo_aprobado)
+    conteo_rechazado = session.exec(select(func.count(PdpPoligrafistasTabla.estado)).where(
+        PdpPoligrafistasTabla.estado == EstadosValidacion.RECHAZADO)
+    ).one()
+
+    return (conteo_pendientes,conteo_aprobado,conteo_rechazado)
 
 
 async def get_count_rdp_validacion_semana(
     session: SessionDep):
 
-    hace_una_semana = datetime.now() - timedelta(days=7)
+    hace_una_semana = (datetime.now() - timedelta(days=7)).date()
 
     conteo_pendientes_semana = session.exec(
         select(func.count()).where(and_(
             PdpPoligrafistasTabla.estado == EstadosValidacion.PENDIENTE,
-            PdpPoligrafistasTabla.fecha_registro >= hace_una_semana))).one()
+            PdpPoligrafistasTabla.fecha_evaluacion >= hace_una_semana))).one()
 
     return conteo_pendientes_semana
 
@@ -236,16 +248,23 @@ async def  get_count_rdp_validacion_regional(
         )
     ).one()
 
-    return (conteo_pendientes,conteo_aprobado)
+    conteo_rechazado = session.exec(select(func.count()).where(
+        and_(
+        PdpPoligrafistasTabla.estado == EstadosValidacion.RECHAZADO,
+        PdpPoligrafistasTabla.regional == regional)
+        )
+    ).one()
+
+    return (conteo_pendientes,conteo_aprobado,conteo_rechazado)
 
 async def get_count_rdp_validacion_semana_reginal(session: SessionDep, regional: str):
 
-    hace_una_semana = datetime.now() - timedelta(days=7)
+    hace_una_semana = (datetime.now() - timedelta(days=7)).date()
 
     conteo = session.exec(
         select(func.count()).where(and_(
             PdpPoligrafistasTabla.estado == EstadosValidacion.PENDIENTE,
             PdpPoligrafistasTabla.regional == regional,
-            PdpPoligrafistasTabla.fecha_registro >= hace_una_semana))).one()
+            PdpPoligrafistasTabla.fecha_evaluacion >= hace_una_semana))).one()
 
     return conteo

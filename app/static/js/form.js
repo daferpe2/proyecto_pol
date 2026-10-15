@@ -11,10 +11,6 @@ document.getElementById("form-resultados-esp").addEventListener("submit", async 
     const data = await resKey.json();
 
     const AES_KEY_BASE64 = data.key.AES_KEY_BASE64;   // ← ESTA ES LA CLAVE REAL
-    console.log("CLAVE RECIBIDA:", AES_KEY_BASE64);
-
-
-    // const AES_KEY_BASE64 = import.meta.env.PUBLIC_AES_KEY_BASE64;
 
     const encrypted = await encryptJSON(json, AES_KEY_BASE64);
 

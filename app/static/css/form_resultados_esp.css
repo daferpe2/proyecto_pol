@@ -75,3 +75,15 @@ button[type="submit"]:hover {
     text-align: center;
   }
 
+.alerta-req {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+.oculto {
+  display: none;
+}

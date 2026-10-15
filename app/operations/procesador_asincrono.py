@@ -23,7 +23,7 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
     Procesa un archivo Excel asociado a un job:
     - Lee filas del Excel.
     - Busca en TablaBaseEspF usando texto_busqueda.
-    - Genera un Excel de resultados.
+    - Genera un Excel de resultados con campos ampliados.
     - Actualiza el job con ruta del archivo y estado final.
     """
 
@@ -74,7 +74,6 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
         wb = load_workbook(filename=io.BytesIO(excel_bytes), data_only=True)
         ws = wb.active
 
-        # Validar encabezados mínimos
         encabezados = [cell.value for cell in ws[1]]
         if "no_cedula" not in encabezados or "apellidos_nombre" not in encabezados:
             raise ValueError("El Excel debe contener columnas 'no_cedula' y 'apellidos_nombre'.")
@@ -136,6 +135,10 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
                         registros.append({
                             "no_cedula": r.no_cedula,
                             "apellidos_nombre": r.apellidos_nombre,
+                            "fecha_asp": r.fecha_asp,
+                            "proceso": r.proceso,
+                            "resultados_obtenidos": r.resultados_obtenidos,
+                            "tipo_hallazgo": r.tipo_hallazgo,
                             "observacion": r.observacion,
                         })
 
@@ -181,6 +184,10 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
             "detalle_error",
             "resultado_no_cedula",
             "resultado_apellidos_nombre",
+            "resultado_fecha_asp",
+            "resultado_proceso",
+            "resultado_resultados_obtenidos",
+            "resultado_tipo_hallazgo",
             "resultado_observacion",
         ])
 
@@ -195,6 +202,10 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
                     "",
                     "",
                     "",
+                    "",
+                    "",
+                    "",
+                    "",
                 ])
             else:
                 for reg in r["resultados"]:
@@ -206,6 +217,10 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
                         r["detalle_error"],
                         reg["no_cedula"],
                         reg["apellidos_nombre"],
+                        reg["fecha_asp"],
+                        reg["proceso"],
+                        reg["resultados_obtenidos"],
+                        reg["tipo_hallazgo"],
                         reg["observacion"],
                     ])
 
@@ -226,5 +241,5 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
         await loop.run_in_executor(None, lambda: sync_set_ruta(ruta))
         await loop.run_in_executor(None, lambda: sync_set_estado(JobEstado.COMPLETADO))
 
-    except Exception:
+    except Exception as e:
         await loop.run_in_executor(None, lambda: sync_set_estado(JobEstado.ERROR, str(e)))

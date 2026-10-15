@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime,UTC
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse
@@ -28,6 +28,8 @@ async def mostrar_rdp_auditor(
 
     consulta_semana = await get_count_rdp_validacion_semana(session=db)
 
+
+
     # 3. Renderizar plantilla
     return templates.TemplateResponse(
         "form_validacion.html",
@@ -37,6 +39,7 @@ async def mostrar_rdp_auditor(
             "user":usuario,
             "pendientes": conteo_validacion[0],
             "aprobados": conteo_validacion[1],
+            "rechazados": conteo_validacion[2],
             "conteo_semanal":consulta_semana
         }
     )
@@ -64,6 +67,7 @@ async def mostrar_rdp_auditor_regional(
             "user":usuario,
             "pendientes": conteo_validacion[0],
             "aprobados": conteo_validacion[1],
+            "rechazados": conteo_validacion[2],
             "conteo_semanal":consulta_semana
         }
     )

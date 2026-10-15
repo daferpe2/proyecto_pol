@@ -1,6 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
 
+<style>
+    /* Estado pendiente */
+.estado-pendiente {
+    background-color: #bf4508;   /* amarillo */
+    color: #faf8f8;
+}
+
+/* Estado aprobado */
+.estado-aprobado {
+    background-color: #2ecc71;   /* verde */
+    color: #fff;
+}
+
+/* Estado rechazado */
+.estado-rechazado {
+    background-color: #e4f127;   /* rojo */
+    color: #fff;
+}
+
+</style>
+
 <div class="container mt-4">
 
     <h2 class="mb-4">Listado de Resultados RDP</h2>
@@ -21,12 +42,12 @@
             
             <div class="card-header">
                 <h3>{{ item.apellidos_nombres }}</h3>
-                <span class="badge bg-secondary">{{ item.estado.name }}</span>
+                <span class="estado-{{ item.estado.name | lower }}">{{ item.estado.name }}</span>
             </div>
 
             <div class="card-body">
                 <p><strong>Fecha Examen:</strong> {{ item.fecha_evaluacion }}</p>
-                <!-- <p><strong>Apellidos y Nombres:</strong> {{ item.apellidos_nombres }}</p> -->
+                <p><strong>Apellidos y Nombres:</strong> {{ item.apellidos_nombres }}</p>
                 <p><strong>Cédula:</strong> {{ item.no_cedula }}</p>
                 <p><strong>Cargo:</strong> {{ item.cargo }}</p>
                 <p><strong>Unidad:</strong> {{ item.batallon_buque_unidad_labora }}</p>
@@ -34,7 +55,7 @@
             </div>
 
             <div class="card-actions">
-            {% if user.rol in ["QC"] %}
+            {% if user.rol in ["QC","COORDINADOR"] %}
                 <form action="/tabla-poligraf/editar_rdp_regional/{{ item.id }}" method="get">
                     <button class="btn btn-edit">Editar</button>
                 </form>

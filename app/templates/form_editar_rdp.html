@@ -18,9 +18,9 @@
     <label>
       Estado
       <select name="estado" id="estado">
-        <option>pendiente</option>
-        <option>aprobado</option>
-        <option>rechazado</option>
+        <option>Pendiente</option>
+        <option>Aprobado</option>
+        <option>Rechazado</option>
       </select>
       <label>Comentarios</label>
       <textarea name="comentarios" id="comentarios">Escriba su comentario</textarea>
@@ -156,7 +156,7 @@
 
     <!-- ===================== ACORDEÓN 4 ===================== -->
     <div class="accordion">
-      <button type="button" id="acordeon-resultados" class="accordion-btn">Resultados de la Evaluación</button>
+      <button type="button" id="acordeon-resultados" class="accordion-btn">Resultados del Examen</button>
       <div class="accordion-content">
 
         <label>Resultado EPP
@@ -174,11 +174,7 @@
         </label>
 
         <label>Tema SR/DI
-          <select name="tema_sr_di" id="tema_sr_di">
-            <option value="{{ registro.tema_sr_di }}">{{ registro.tema_sr_di }}</option>
-            <option disabled>Seleccione</option>
-            <option>NO</option>
-            <option>SI</option>
+            <textarea name="tema_sr_di" id="tema_sr_di">{{ registro.tema_sr_di }} </textarea>
           </select>
         </label>
 
@@ -239,8 +235,8 @@
           <select name="resultado_tmd" id="resultado_tmd">
             <option value="{{ registro.resultado_tmd }}">{{ registro.resultado_tmd }}</option>
             <option disabled>Seleccione</option>
-            <option>SI</option>
-            <option>NO</option>
+            <option>POSITIVO</option>
+            <option>NEGATIVO</option>
           </select>
         </label>
 
@@ -286,6 +282,32 @@
 <script type="module" src="/app/static/js/formupdate_rdp.js"></script>
 <script src="/app/static/js/unidades_form_esp_update.js"></script>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const resultadoEpp = document.querySelector("select[name='resultado_epp']");
+  const temaSrDi = document.getElementById("tema_sr_di");
+
+  function validarTema() {
+    const valor = resultadoEpp.value;
+
+    if (valor === "SR" || valor === "DI") {
+      temaSrDi.disabled = false;
+      temaSrDi.value = "";
+    } else {
+      temaSrDi.disabled = true;
+      temaSrDi.value = "Ninguna";
+    }
+  }
+
+  // Ejecutar al cargar
+  validarTema();
+
+  // Ejecutar cuando cambie el select
+  resultadoEpp.addEventListener("change", validarTema);
+
+});
+</script>
 
 
 

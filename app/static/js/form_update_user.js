@@ -39,7 +39,6 @@ document.getElementById("form-user-update")
     const data = await resKey.json();
     const AES_KEY_BASE64 = data.key.AES_KEY_BASE64;
 
-    console.log("CLAVE RECIBIDA:", AES_KEY_BASE64);
 
     // Cifrar JSON
     const encrypted = await encryptJSON(json, AES_KEY_BASE64);

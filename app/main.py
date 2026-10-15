@@ -1,9 +1,11 @@
 from contextlib import asynccontextmanager
 
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI,status
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from sqlmodel import SQLModel
 
+from app.operations.checkroles import require_role
 import settings
 from app.operations.autentiacion_funciones import get_current_user_id
 from app.routers import (
@@ -19,6 +21,7 @@ from app.routers import (
     log_usuarios
 )
 from db import engine
+from models import Rol, UserTable
 
 
 @asynccontextmanager
@@ -33,7 +36,11 @@ app.mount("/app/static/",StaticFiles(directory="app/static/"),name="static")
 
 @app.get("/crypto/key")
 def get_crypto_key(user=Depends(get_current_user_id)):
-    return {"key": settings.settings}
+    if not isinstance(user,UserTable):
+        return RedirectResponse("/",status_code=status.HTTP_401_UNAUTHORIZED)
+
+    require_role([Rol.analista,Rol.coordinador,Rol.jefe,Rol.qc,Rol.qc_s,Rol.registro])
+    return {"key": {"AES_KEY_BASE64":settings.settings.AES_KEY_BASE64}}
 
 
 # @app.middleware("http")

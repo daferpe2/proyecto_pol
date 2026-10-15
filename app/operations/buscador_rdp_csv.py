@@ -23,7 +23,7 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
     Procesa un archivo Excel asociado a un job RDP:
     - Lee filas del Excel.
     - Busca en PdpPoligrafistasTabla usando texto_busqueda.
-    - Genera un Excel de resultados.
+    - Genera un Excel de resultados con campos ampliados.
     - Actualiza el job con ruta del archivo y estado final.
     """
 
@@ -136,7 +136,20 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
                         registros.append({
                             "no_cedula": r.no_cedula,
                             "apellidos_nombres": r.apellidos_nombres,
+                            "fecha_evaluacion": r.fecha_evaluacion,
                             "categoria": r.categoria,
+                            "complemento_proceso": r.complemento_proceso,
+                            "temas_examinados": r.temas_examinados,
+                            "comando_direccion_brigada_flotilla_grupo": r.comando_direccion_brigada_flotilla_grupo,
+                            "grado": r.grado,
+                            "cargo": r.cargo,
+                            "resultado_epp": r.resultado_epp,
+                            "tema_sr_di": r.tema_sr_di,
+                            "informacion_obtenida": r.informacion_obtenida,
+                            "informacion_relevante": r.informacion_relevante,
+                            "observaciones": r.observaciones,
+                            "se_realizo_test_consumo": r.se_realizo_test_consumo,
+                            "ain": r.ain,
                         })
 
                     estado = "INCONSISTENCIA_DATOS" if inconsistencia else "OK"
@@ -181,7 +194,20 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
             "detalle_error",
             "resultado_no_cedula",
             "resultado_apellidos_nombres",
-            "resultado_categoria",
+            "fecha_evaluacion",
+            "categoria",
+            "complemento_proceso",
+            "temas_examinados",
+            "comando_direccion_brigada_flotilla_grupo",
+            "grado",
+            "cargo",
+            "resultado_epp",
+            "tema_sr_di",
+            "informacion_obtenida",
+            "informacion_relevante",
+            "observaciones",
+            "se_realizo_test_consumo",
+            "ain",
         ])
 
         for r in resultados:
@@ -192,6 +218,19 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
                     r["criterio_busqueda"],
                     r["estado"],
                     r["detalle_error"],
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
                     "",
                     "",
                     "",
@@ -206,7 +245,20 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
                         r["detalle_error"],
                         reg["no_cedula"],
                         reg["apellidos_nombres"],
+                        reg["fecha_evaluacion"],
                         reg["categoria"],
+                        reg["complemento_proceso"],
+                        reg["temas_examinados"],
+                        reg["comando_direccion_brigada_flotilla_grupo"],
+                        reg["grado"],
+                        reg["cargo"],
+                        reg["resultado_epp"],
+                        reg["tema_sr_di"],
+                        reg["informacion_obtenida"],
+                        reg["informacion_relevante"],
+                        reg["observaciones"],
+                        reg["se_realizo_test_consumo"],
+                        reg["ain"],
                     ])
 
         # -----------------------------
@@ -226,5 +278,5 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
         await loop.run_in_executor(None, lambda: sync_set_ruta(ruta))
         await loop.run_in_executor(None, lambda: sync_set_estado(JobEstado.COMPLETADO))
 
-    except Exception:
+    except Exception as e:
         await loop.run_in_executor(None, lambda: sync_set_estado(JobEstado.ERROR, str(e)))

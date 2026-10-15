@@ -129,3 +129,17 @@
 .btn-guardar:hover {
     background: #d9772b;
 }
+
+
+.alerta-req {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+.oculto {
+  display: none;
+}

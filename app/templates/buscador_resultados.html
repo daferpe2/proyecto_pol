@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="card" style="width: 1050px;">
-    <h2>Buscador de Resultados Poligráficos</h2>
+    <h2>Buscador de Resultados</h2>
 
     <form method="POST" action="/resultados-poligraficos/buscar">
         <div class="search-container">
@@ -76,6 +76,7 @@
                 <th>Cédula</th>
                 <th>Grado</th>
                 <th>Cargo</th>
+                <th>Unidad</th>
                 <th>Resultado</th>
                 <th>Agregar</th>
             </tr>
@@ -113,12 +114,12 @@
         <thead>
             <tr>
                 <th>Fecha RDP</th>
-                <th>Nombre</th>
-                <th>Cédula</th>
                 <th>Grado</th>
-                <th>Cargo</th>
+                <th>Apellidos y Nombre</th>
                 <th>Categoria</th>
                 <th>Unidad</th>
+                <th>Resultado</th>
+                <th>Agregar</th>
             </tr>
         </thead>
 
@@ -126,12 +127,11 @@
             {% for r_d in resultados_rdp %}
             <tr>
                 <td>{{ r_d.fecha_evaluacion }}</td>
-                <td>{{ r_d.apellidos_nombres }}</td>
-                <td>{{ r_d.no_cedula }}</td>
                 <td>{{ r_d.grado }}</td>
-                <td>{{ r_d.cargo }}</td>
+                <td>{{ r_d.apellidos_nombres }}</td>
                 <td>{{ r_d.categoria }}</td>
                 <td>{{ r_d.comando_direccion_brigada_flotilla_grupo }}</td>
+                <td>{{ r_d.resultado_epp }}</td>
                 <td>
                     <button class="btn-secondary" onclick="agregarAInforme({{ r_d.id }})">
                         Añadir

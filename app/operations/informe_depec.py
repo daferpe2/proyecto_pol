@@ -264,6 +264,9 @@ class InformeRDP:
         bloque_largo("INFORMACIÓN OBTENIDA", r.observaciones)
         bloque_largo("RESULTADO EPP", r.resultado_epp)
 
+        # NUEVO: Tema SR/DI
+        bloque_largo("TEMA SR/DI", r.tema_sr_di)
+
     def exportar(self):
         # Construir documento completo
         self.construir_encabezado()

@@ -42,9 +42,7 @@ document.getElementById("form-rdp").addEventListener("submit", async (e) => {
     // ============================
     // 5. Encriptar
     // ============================
-    console.log("CLAVE RECIBIDA:", AES_KEY_BASE64);
-    console.log("TIPO:", typeof AES_KEY_BASE64);
-    
+
     const encrypted = await encryptJSON(json, AES_KEY_BASE64);
 
     // ============================

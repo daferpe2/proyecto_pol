@@ -141,7 +141,7 @@
 
       <!-- ===================== ACORDEÓN 4 ===================== -->
       <div class="accordion">
-        <button type="button" class="accordion-btn">Resultados de la Evaluación</button>
+        <button type="button" class="accordion-btn">Resultados del Examen</button>
         <div class="accordion-content">
 
           <label>Resultado EPP
@@ -157,15 +157,17 @@
             </select>
           </label>
 
+          <!-- Esto se debe cambiar a texto con un condicional con sr/di -->
           <label>Tema SR/DI
-            <select name="tema_sr_di" id="tema_sr_di">
+            <!-- <select name="tema_sr_di" id="tema_sr_di">
               <option selected>NO</option>
               <option>SI</option>
-            </select>
+            </select> -->
+            <textarea name="tema_sr_di" id="tema_sr_di">Ninguna</textarea>
           </label>
 
           <label>Información Obtenida
-            <textarea name="informacion_obtenida"></textarea>
+            <textarea name="informacion_obtenida">Ninguna</textarea>
           </label>
 
           <label>Información Relevante
@@ -176,7 +178,7 @@
           </label>
 
           <label>Observaciones
-            <textarea name="observaciones" required></textarea>
+            <textarea name="observaciones" required>Ninguna</textarea>
           </label>
 
         </div>
@@ -204,15 +206,15 @@
           <label>Resultado TMD
             <!-- <input name="resultado_tmd" id="resultado_tmd" type="text" value="NoData" autocomplete="on"> -->
             <select name="resultado_tmd" id="resultado_tmd">
-              <option>SI</option>
-              <option selected>NO</option>
+              <option>Positivo</option>
+              <option selected>Negativo</option>
             </select>
           </label>
 
           <label>Tipo de Sustancia
             <!-- <input name="tipo_sustancia" id="tipo_sustancia" type="text" value="NoData" autocomplete="on"> -->
              <select name="tipo_sustancia" id="tipo_sustancia">
-              <option value="NoData">Seleccione resultado</option>
+              <option value="Ninguna">Seleccione sustancia</option>
               <option>COC</option>
               <option>THC</option>
               <option>AMP</option>
@@ -290,8 +292,8 @@ document.addEventListener("DOMContentLoaded", () => {
             resultadoTmd.required = false;
             tipoSustancia.required = false;
 
-            resultadoTmd.value = "NoData";
-            tipoSustancia.value = "NoData";
+            resultadoTmd.value = "Ninguna";
+            tipoSustancia.value = "Ninguna";
         }
     }
 
@@ -302,6 +304,7 @@ document.addEventListener("DOMContentLoaded", () => {
     radios.forEach(r => r.addEventListener("change", actualizarEstadoTest));
 });
 </script>
+
 
 
 {% endblock %}

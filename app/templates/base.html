@@ -32,7 +32,7 @@
         </div>
         {% endif %}
 
-        {% if user.rol in ["QC"] %}
+        {% if user.rol in ["QC","COORDINADOR"] %}
         <div class="menu-item {% if active_page == 'dashboard' %}active{% endif %}">
             <a href="/validacion/auditor/rdp-regional"><p>📈</p></a>
             <a href="/validacion/auditor/rdp-regional"><span class="menu-text">Dashboard</span></a>
@@ -51,7 +51,7 @@
             </a>
         </div>
 
-        {% if user.rol in ["QC"] %}
+        {% if user.rol in ["QC","COORDINADOR"] %}
 
         <div class="menu-item {% if active_page == 'lista_esp' %}active{% endif %}">
             <a href="/tabla-base-esp/lista_sdp_regional"><i>💬</i></a>
@@ -92,11 +92,19 @@
 
         {% endif %}
 
+
+        {% if user.rol in ["QC","COORDINADOR"] %}
+        <div class="menu-item {% if active_page == 'media' %}active{% endif %}">
+            <a href="/carga/upload-form"><i>🆙</i></a>
+            <a href="/carga/upload-form"><span class="menu-text">Cargar Información</span></a>
+        </div> 
+        {% endif %}
+
         <div class="menu-item">
             <a href="/logout"><i>⬆️</i></a>
             <span class="menu-text"><a href="/logout">Logout</a></span>
         </div>
-        {% if user.rol in ["ANALISTA", "SUPER_ADMIN", "JEFE"] %}
+        {% if user.rol in ["SUPER_ADMIN"] %}
         <div class="menu-item {% if active_page == 'settings' %}active{% endif %}">
             <a href="/usuarios/lista_usuarios"><i>⚙️</i></a>
             <a href="/usuarios/lista_usuarios"><span class="menu-text">Personal</span></a>

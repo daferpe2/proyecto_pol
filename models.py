@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import UTC, date, datetime
 from enum import Enum
 
 from pydantic import BaseModel, EmailStr, field_validator
@@ -7,11 +7,14 @@ from sqlmodel import Field, SQLModel
 from app.operations.generacion_documento import numero_documento
 
 
+def fechactual():
+    return datetime.now().isoformat()
+
 class EstadosValidacion(str,Enum):
-    PENDIENTE = "pendiente"
-    OBSERVADO = "observado"
-    APROBADO = "aprobado"
-    RECHAZADO = "rechazado"
+    PENDIENTE = "Pendiente"
+    OBSERVADO = "Observado"
+    APROBADO = "Aprobado"
+    RECHAZADO = "Rechazado"
 
 # Usuarios
 
@@ -22,6 +25,7 @@ class Rol(str,Enum):
     analista = "ANALISTA"
     super_admin = "SUPER_ADMIN"
     jefe = "JEFE"
+    coordinador = "COORDINADOR"
 
 
 class Usuario(SQLModel):
@@ -76,6 +80,7 @@ class UsuarioRead(Usuario):
 
 # TablaEsp
 
+
 class TablaBaseEsp(SQLModel):
     fecha_asp: date | None = Field(default=None)
     proceso: str | None = Field(default=None)
@@ -90,24 +95,29 @@ class TablaBaseEsp(SQLModel):
     resultados_obtenidos: str | None = Field(default=None)
     tipo_hallazgo: str | None = Field(default=None)
     observacion: str | None = Field(default=None)
-    texto_busqueda: str | None = Field(default=None,index=True)
+    texto_busqueda: str | None = Field(default=None, index=True)
     regional: str | None = Field(default=None)
 
-    @field_validator("texto_busqueda",mode="before")
+    @field_validator("texto_busqueda", mode="before")
     @classmethod
-    def build_searchvector(cls,value,info):
+    def build_searchvector(cls, value, info):
         no_cedula = info.data.get("no_cedula") or ""
         apellidos_nombre = info.data.get("apellidos_nombre") or ""
-
         return f"{no_cedula} {apellidos_nombre}"
 
 
 class TablaBaseEspF(TablaBaseEsp, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    fecha_registro: datetime = Field(default_factory=datetime.now)
+
+    fecha_registro: datetime = Field(
+        default_factory=lambda: datetime.now(UTC)
+    )
+
     lista_esp_id: int | None = Field(default=None, foreign_key="usertable.id")
-    numer_registro: str = Field(default_factory=numero_documento) 
-    fecha_act: datetime | None = Field(default=None)
+    numer_registro: str = Field(default_factory=numero_documento)
+
+    fecha_act: date | None = Field(default=None)
+
 
 
 class TablaBaseEspPublic(TablaBaseEsp):
@@ -148,7 +158,7 @@ class TablaBaseEspUpdate(SQLModel):
     observacion: str | None = None
     texto_busqueda: str | None = None
     lista_esp_id: int | None = None
-    fecha_act: date | None = None
+    fecha_act: date | None = date.today()
     regional: str | None = None
     texto_busqueda: str | None = None
 
@@ -202,7 +212,7 @@ class PdpPoligrafistas(SQLModel):
 class PdpPoligrafistasTabla(PdpPoligrafistas, table=True):
     id: int | None = Field(default=None, primary_key=True)
     fecha_registro: datetime = Field(default_factory=datetime.now)
-    fecha_act: datetime | None = Field(default=None)
+    fecha_act: date | None = Field(default=None)
     usuario: int | None = Field(default=None, foreign_key="usertable.id")
     estado: EstadosValidacion = Field(default=EstadosValidacion.PENDIENTE)
 
@@ -354,3 +364,4 @@ class JobCargaRDP(BaseModel):
     filas_insertadas: int | None
     filas_con_error: int | None
     errores_json: list | None
+

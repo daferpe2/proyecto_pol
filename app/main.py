@@ -1,3 +1,4 @@
+import asyncio
 from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI,status
@@ -6,6 +7,8 @@ from fastapi.staticfiles import StaticFiles
 from sqlmodel import SQLModel
 
 from app.operations.checkroles import require_role
+from app.taks.cleanup import tarea_borrado_semanal
+from app.taks.scheduler import tarea_limpieza
 import settings
 from app.operations.autentiacion_funciones import get_current_user_id
 from app.routers import (
@@ -22,11 +25,40 @@ from app.routers import (
 )
 from db import engine
 from models import Rol, UserTable
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 
 @asynccontextmanager
 async def lifespan(app:FastAPI):
     SQLModel.metadata.create_all(engine)
+    asyncio.create_task(tarea_borrado_semanal())
+    # scheduler = AsyncIOScheduler()
+
+    # Ejecutar cada semana
+    # scheduler.add_job(
+    #     tarea_limpieza,
+    #     trigger="cron",
+    #     day_of_week="mon",   # lunes
+    #     hour=3,              # 03:00 AM
+    #     minute=0
+    # )
+
+    # scheduler.add_job(
+    #     tarea_limpieza,
+    #     trigger="interval",
+    #     minutes=1
+    # )
+
+    # Si quieres mensual:
+    # scheduler.add_job(tarea_limpieza, trigger="cron", day=1, hour=3, minute=0)
+
+    # scheduler.start()
+    # print("✔ APScheduler iniciado")
+
+    # yield
+
+    # scheduler.shutdown()
+    # print("✔ APScheduler detenido")
     yield
 
 app = FastAPI(lifespan=lifespan)

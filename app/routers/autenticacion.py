@@ -1,5 +1,7 @@
+import base64
+import json
 from typing import Annotated
-
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from fastapi import APIRouter, Form, HTTPException, Request, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.params import Depends
@@ -19,6 +21,8 @@ from app.operations.crud_usuarios import (
     get_registros,
     update_registro,
 )
+from app.operations.desifrado_loggin import decrypt_login_payload
+from app.operations.encryptedpayload import AES_KEY, EncryptedPayload
 from app.operations.token_manager import TokenManager
 from db import SessionDep
 from models import UserTable, UsuarioCreate, UsuarioPublic, UsuarioRead, UsuarioUpdate
@@ -42,55 +46,68 @@ async def auth_fomr(request:Request):
     return templates.TemplateResponse("formulario_ingreso.html",{"request":request})
 
 
-@router.post("/inicio_secion")
+
+@router.post("/inicio_sesion")
 async def login_user(
     session: SessionDep,
-    email: Annotated[str, Form(...)],
-    password: Annotated[str, Form(...)],
+    request: Request,
     token_manager: TokenManager = Depends(get_token_manager)
 ):
-    email = email.strip()
+    # 1. Recibir JSON
+    data = await request.json()
 
-    # Validación correcta
+    if "payload" not in data:
+        raise HTTPException(status_code=400, detail="Payload faltante")
+
+    # 2. Descifrar RSA‑OAEP
+    try:
+        creds = decrypt_login_payload(data["payload"])
+    except Exception:
+        raise HTTPException(status_code=400, detail="Error al descifrar datos")
+
+    email = creds.get("email", "").strip()
+    password = creds.get("password", "")
+
+    if not email or not password:
+        raise HTTPException(status_code=400, detail="Datos incompletos")
+
+    # 3. Validar usuario (tu lógica actual)
     db_p = get_current_user(session=session, email=email, password=password)
 
     if not isinstance(db_p, UserTable):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="No autorizado"
-        )
+        raise HTTPException(status_code=403, detail="No autorizado")
 
-    # Crear token seguro
+    # 4. Crear token (tu lógica actual)
     token = token_manager.create_token({
-        'id': db_p.id,
-        'role': db_p.rol
+        "id": db_p.id,
+        "role": db_p.rol
     })
 
+    # 5. Respuesta con cookies seguras (tu lógica actual)
     response = RedirectResponse("/home", status_code=status.HTTP_302_FOUND)
 
-    # Cookie del usuario
     response.set_cookie(
         key="user_id",
         value=str(db_p.id),
         max_age=TIME_EXPIRE,
-        httponly=True,      # Debe ser True
-        secure=False,       # Cambiar a True en producción
+        httponly=True,
+        secure=False,   # True en producción
         samesite="Lax",
-        path="/"            # Debe ser "/" para que exista en toda la app
+        path="/"
     )
 
-    # Cookie del token
     response.set_cookie(
         key="access_token",
         value=token,
         max_age=TIME_EXPIRE,
-        httponly=True,      # Debe ser True
-        secure=False,       # Cambiar a True en producción
+        httponly=True,
+        secure=False,   # True en producción
         samesite="Lax",
-        path="/"            # Igual que arriba
+        path="/"
     )
 
     return response
+
 
 
 @router.get("/logout")

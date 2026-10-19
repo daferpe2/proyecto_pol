@@ -75,9 +75,21 @@ def get_crypto_key(user=Depends(get_current_user_id)):
     return {"key": {"AES_KEY_BASE64":settings.settings.AES_KEY_BASE64}}
 
 
+@app.get("/crypto/login-public-key")
+async def get_login_public_key():
+    """
+    Devuelve la llave pública RSA para el login.
+    Este endpoint NO debe requerir autenticación.
+    """
+    with open("keys\LOGIN_PUBLIC_KEY.pem", "r") as f:
+        public_key_pem = f.read()
+
+    return {"public_key": public_key_pem}
+
+
 # @app.middleware("http")
 # async def auth_middleware(request: Request, call_next):
-#     if request.url.path in ["/", "/inicio_secion"]:
+#     if request.url.path in ["/", "/inicio_sesion"]:
 #         return await call_next(request)
 
 #     token = request.cookies.get("access_token")

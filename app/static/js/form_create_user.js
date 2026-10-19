@@ -12,7 +12,7 @@ document.getElementById("form-user-create").addEventListener("submit", async (e)
     const data = await resKey.json();
 
     const AES_KEY_BASE64 = data.key.AES_KEY_BASE64;   // ← ESTA ES LA CLAVE REAL
-    console.log("CLAVE RECIBIDA:", AES_KEY_BASE64);
+
     // ============================
 
 

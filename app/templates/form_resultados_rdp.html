@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 
+
+
 <div class="content">
 
   <form id="form-rdp" class="form-container" onsubmit="handleSubmitRdp(event)">
@@ -305,6 +307,31 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const resultadoEpp = document.querySelector("select[name='resultado_epp']");
+  const temaSrDi = document.getElementById("tema_sr_di");
+
+  function validarTema() {
+    const valor = resultadoEpp.value;
+
+    if (valor === "SR" || valor === "DI") {
+      temaSrDi.readOnly = false;
+      temaSrDi.value = "";
+      temaSrDi.style.background = "white";
+    } else {
+      temaSrDi.readOnly = true;
+      temaSrDi.value = "Ninguna";
+      temaSrDi.style.background = "#eee"; // opcional
+    }
+  }
+
+  validarTema();
+  resultadoEpp.addEventListener("change", validarTema);
+
+});
+</script>
 
 
 {% endblock %}

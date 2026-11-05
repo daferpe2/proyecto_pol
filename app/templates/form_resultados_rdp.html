@@ -47,8 +47,7 @@
             <input name="complemento_proceso" type="text" autocomplete="on">
           </label>
 
-          <label>Temas Examinados
-            <!-- <textarea name="temas_examinados" rows="2" autocomplete="on"></textarea> -->
+          <!-- <label>Temas Examinados
              <select name="temas_examinados" id="temas_examinados">
              <option value="">Seleccione</option>
                 <option>SUMINISTRO DE INFORMACION, VINCULOS, ALTERACION DE FUNCIONES</option>
@@ -62,7 +61,40 @@
                 <option>PLANES DE CAUSAR DAÑO, VINCULOS, PARTICIPACION EN DELITOS, CONSUMO HABITUAL</option>
                 <option>SUMINISTRO DE INFORMACION, VINCULOS, SABOTAJE, DELITOS</option>
              </select>
+          </label> -->
+
+          <label>
+              Temas Examinados
+
+              <select
+                  name="temas_examinados"
+                  id="temas_examinados"
+                  onchange="mostrarNuevoTema()">
+
+                <option value="">Seleccione</option>
+                <option>SUMINISTRO DE INFORMACION, VINCULOS, ALTERACION DE FUNCIONES</option>
+                <option>SUMINISTRO DE INFORMACION, VINCULOS, IRREGULARIDADES CON MATERIAL RESERVADO</option>
+                <option>SUMINISTRO DE INFORMACION, VINCULOS, PARTICIPACION EN ACTIVIDADES ILEGALES</option>
+                <option>SUMINISTRO DE INFORMACION, BENEFICIO POR CORRUPCION, OCULTAMIENTO DE CORRUPCION</option>
+                <option>SUMINISTRO DE INFORMACION, VINCULOS, PLANES</option>
+                <option>CONSUMO HABITUAL, VINCULOS, PLANES</option>
+                <option>SUMINISTRO DE INFORMACION, VINCULOS, ALTERACION DE FUNCIONES, CONSUMO HABITUAL</option>
+                <option>SUMINISTRO DE INFORMACION, VINCULOS, PARTICIPACION EN DELITOS, PLANES DE CAUSAR DAÑO</option>
+                <option>PLANES DE CAUSAR DAÑO, VINCULOS, PARTICIPACION EN DELITOS, CONSUMO HABITUAL</option>
+                <option>SUMINISTRO DE INFORMACION, VINCULOS, SABOTAJE, DELITOS</option>
+                <option value="otro" style="text-transform: uppercase;">OTRO (ESPECIFICAR)</option>
+              </select>
+ 
+
+              </select>
           </label>
+
+          <div id="nuevoTemaContainer" style="display:none;">
+              <input
+                  type="text"
+                  id="nuevoTema"
+                  placeholder="Digite el nuevo tema">
+          </div>
 
           <label>Técnica
             <select name="tecnica" required>
@@ -250,6 +282,37 @@
 <script src="/app/static/js/grado_clase.js"></script>
 
 <script>
+function mostrarNuevoTema() {
+    const select = document.getElementById("temas_examinados");
+    const contenedor = document.getElementById("nuevoTemaContainer");
+
+    contenedor.style.display =
+        select.value === "otro" ? "block" : "none";
+}
+
+document
+    .getElementById("form-rdp")
+    .addEventListener("submit", function() {
+
+        const select = document.getElementById("temas_examinados");
+        const nuevoTema = document.getElementById("nuevoTema");
+
+        if (select.value === "otro" && nuevoTema.value.trim() !== "") {
+
+            // Crear una opción temporal con el nuevo texto
+            const opcion = new Option(
+                nuevoTema.value.trim(),
+                nuevoTema.value.trim()
+            );
+
+            select.add(opcion);
+            select.value = nuevoTema.value.trim();
+        }
+    });
+</script>
+
+
+<script>
   const accordions = document.querySelectorAll(".accordion-btn");
   accordions.forEach(btn => {
     btn.addEventListener("click", () => {
@@ -332,6 +395,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 </script>
+
 
 
 {% endblock %}

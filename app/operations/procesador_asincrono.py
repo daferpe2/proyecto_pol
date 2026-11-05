@@ -2,7 +2,7 @@ import asyncio
 import io
 import os
 import uuid
-from datetime import datetime
+from datetime import UTC, datetime
 
 from openpyxl import Workbook, load_workbook
 from sqlmodel import Session, select
@@ -44,7 +44,7 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
                 return
             job.estado = estado
             job.error_detalle = error
-            job.fecha_actualizacion = datetime.now()
+            job.fecha_actualizacion = datetime.now(UTC)
             session.add(job)
             session.commit()
 
@@ -54,7 +54,7 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
             if not job:
                 return
             job.ruta_archivo_resultado = ruta
-            job.fecha_actualizacion = datetime.now()
+            job.fecha_actualizacion = datetime.now(UTC)
             session.add(job)
             session.commit()
 

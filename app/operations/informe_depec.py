@@ -260,12 +260,13 @@ class InformeRDP:
             c_val.merge(row_val.cells[1])
             c_val.text = str(valor)
 
-        bloque_largo("INFORMACIÓN RELEVANTE", r.informacion_relevante)
-        bloque_largo("INFORMACIÓN OBTENIDA", r.observaciones)
         bloque_largo("RESULTADO EPP", r.resultado_epp)
-
-        # NUEVO: Tema SR/DI
         bloque_largo("TEMA SR/DI", r.tema_sr_di)
+        bloque_largo("INFORMACIÓN OBTENIDA", r.observaciones)
+        bloque_largo("INFORMACIÓN RELEVANTE", r.informacion_relevante)
+
+        # NUEVO: Tema AIN
+        bloque_largo("AIN", r.ain)
 
     def exportar(self):
         # Construir documento completo

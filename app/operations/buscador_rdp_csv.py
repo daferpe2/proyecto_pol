@@ -2,7 +2,7 @@ import asyncio
 import io
 import os
 import uuid
-from datetime import datetime
+from datetime import UTC, datetime
 
 from openpyxl import Workbook, load_workbook
 from sqlmodel import Session, select
@@ -44,7 +44,7 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
                 return
             job.estado = estado
             job.error_detalle = error
-            job.fecha_actualizacion = datetime.now()
+            job.fecha_actualizacion = datetime.now(UTC)
             session.add(job)
             session.commit()
 
@@ -54,7 +54,7 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
             if not job:
                 return
             job.ruta_archivo_resultado = ruta
-            job.fecha_actualizacion = datetime.now()
+            job.fecha_actualizacion = datetime.now(UTC)
             session.add(job)
             session.commit()
 
@@ -137,10 +137,14 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
                             "no_cedula": r.no_cedula,
                             "apellidos_nombres": r.apellidos_nombres,
                             "fecha_evaluacion": r.fecha_evaluacion,
+                            "regional":r.regional,
                             "categoria": r.categoria,
+                            "proceso":r.proceso,
                             "complemento_proceso": r.complemento_proceso,
                             "temas_examinados": r.temas_examinados,
+                            "fuerza_jefatura":r.fuerza_jefatura,
                             "comando_direccion_brigada_flotilla_grupo": r.comando_direccion_brigada_flotilla_grupo,
+                            "batallon_unidad":r.batallon_buque_unidad_labora,
                             "grado": r.grado,
                             "cargo": r.cargo,
                             "resultado_epp": r.resultado_epp,
@@ -149,6 +153,8 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
                             "informacion_relevante": r.informacion_relevante,
                             "observaciones": r.observaciones,
                             "se_realizo_test_consumo": r.se_realizo_test_consumo,
+                            "resultado_test_consumo":r.resultado_tmd,
+                            "tipo_sustancia":r.tipo_sustancia,
                             "ain": r.ain,
                         })
 
@@ -195,10 +201,14 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
             "resultado_no_cedula",
             "resultado_apellidos_nombres",
             "fecha_evaluacion",
+            "regional",
             "categoria",
+            "proceso",
             "complemento_proceso",
             "temas_examinados",
+            "fuerza_jefatura",
             "comando_direccion_brigada_flotilla_grupo",
+            "batallon_unidad",
             "grado",
             "cargo",
             "resultado_epp",
@@ -207,49 +217,45 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
             "informacion_relevante",
             "observaciones",
             "se_realizo_test_consumo",
+            "resultado_test_consumo",
+            "tipo_sustancia",
             "ain",
         ])
 
         for r in resultados:
+
             if not r["resultados"]:
-                out_ws.append([
-                    r["input_no_cedula"],
-                    r["input_apellidos_nombres"],
-                    r["criterio_busqueda"],
-                    r["estado"],
-                    r["detalle_error"],
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                ])
+                out_ws.append(
+                    [
+                        r["input_no_cedula"],
+                        r["input_apellidos_nombres"],
+                        r["criterio_busqueda"],
+                        r["estado"],
+                        r["detalle_error"],
+                    ] + [""] * 22
+                )
+
             else:
                 for reg in r["resultados"]:
+
                     out_ws.append([
                         r["input_no_cedula"],
                         r["input_apellidos_nombres"],
                         r["criterio_busqueda"],
                         r["estado"],
                         r["detalle_error"],
+
                         reg["no_cedula"],
                         reg["apellidos_nombres"],
                         reg["fecha_evaluacion"],
+                        reg["regional"],
                         reg["categoria"],
+                        reg["proceso"],
                         reg["complemento_proceso"],
                         reg["temas_examinados"],
+                        reg["fuerza_jefatura"],
                         reg["comando_direccion_brigada_flotilla_grupo"],
+                        reg["batallon_unidad"],
                         reg["grado"],
                         reg["cargo"],
                         reg["resultado_epp"],
@@ -258,9 +264,10 @@ async def procesar_excel_job(job_id: int, excel_bytes: bytes):
                         reg["informacion_relevante"],
                         reg["observaciones"],
                         reg["se_realizo_test_consumo"],
+                        reg["resultado_test_consumo"],
+                        reg["tipo_sustancia"],
                         reg["ain"],
                     ])
-
         # -----------------------------
         # 6. Guardar archivo
         # -----------------------------

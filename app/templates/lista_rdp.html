@@ -55,7 +55,7 @@
         <div class="card-actions">
 
             {# --- BOTÓN EDITAR --- #}
-            {% if user.rol in ["QC","QC_S","SUPER_ADMIN","COORDINADOR"] %}
+            {% if user.rol in ["QC","QC_S","SUPER_ADMIN","ANALISTA"] %}
             <form action="/tabla-poligraf/editar_rdp/{{ r.id }}" method="get">
                 <button class="btn btn-edit">Editar</button>
             </form>

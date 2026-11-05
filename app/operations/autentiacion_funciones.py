@@ -89,7 +89,10 @@ def get_current_user_id(
 
 
     if not user_cookie_id:
-        return None
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Sesión expirada"
+        )
 
     user = session.get(UserTable, int(user_cookie_id))
 

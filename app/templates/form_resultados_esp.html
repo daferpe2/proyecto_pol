@@ -115,7 +115,7 @@
       <div class="accordion-content--row">
         <label class="accordion-content--col">
           Académico
-          <select name="acad" class="resultado-select">
+          <select name="acad" class="resultado-select" required>
             <option value="">Seleccione</option>
             <option value="SH">SH</option>
             <option value="CH">CH</option>
@@ -126,7 +126,7 @@
 
         <label class="accordion-content--col">
           Laboral
-          <select name="lab" class="resultado-select">
+          <select name="lab" class="resultado-select" required>
             <option value="">Seleccione</option>
             <option value="SH">SH</option>
             <option value="CH">CH</option>
@@ -140,7 +140,7 @@
       <div class="accordion-content--row">
         <label class="accordion-content--col">
           Listas Restrictivas
-          <select name="listas" class="resultado-select">
+          <select name="listas" class="resultado-select" required>
             <option value="">Seleccione</option>
             <option value="SH">SH</option>
             <option value="CH">CH</option>
@@ -151,7 +151,7 @@
 
         <label class="accordion-content--col">
           Antecedentes (Bases / Adversos)
-          <select name="antecedentes" class="resultado-select">
+          <select name="antecedentes" class="resultado-select" required>
             <option value="">Seleccione</option>
             <option value="SH">SH</option>
             <option value="CH">CH</option>
@@ -165,7 +165,7 @@
       <div class="accordion-content--row">
         <label class="accordion-content--col">
           Núcleo Familiar
-          <select name="nucleo" class="resultado-select">
+          <select name="nucleo" class="resultado-select" required>
             <option value="">Seleccione</option>
             <option value="SH">SH</option>
             <option value="CH">CH</option>
@@ -176,7 +176,7 @@
 
         <label class="accordion-content--col">
           Visita de Seguridad
-          <select name="visita" class="resultado-select">
+          <select name="visita" class="resultado-select" required>
             <option value="">Seleccione</option>
             <option value="SH">SH</option>
             <option value="CH">CH</option>
@@ -190,7 +190,7 @@
       <div class="accordion-content--row">
         <label class="accordion-content--col">
           Salud
-          <select name="salud" class="resultado-select">
+          <select name="salud" class="resultado-select" required>
             <option value="">Seleccione</option>
             <option value="SH">SH</option>
             <option value="CH">CH</option>
@@ -221,11 +221,11 @@
       </label>
 
       <label>Tipo de Hallazgo
-        <textarea name="tipo_hallazgo" rows="3"></textarea>
+        <textarea name="tipo_hallazgo" rows="3">Ninguna</textarea>
       </label>
 
       <label>Observación
-        <textarea name="observacion" rows="3"></textarea>
+        <textarea name="observacion" rows="3">Ninguna</textarea>
       </label>
 
       <input type="number" name="lista_esp_id" value="{{ user.id }}" hidden>

@@ -5,7 +5,7 @@ import uuid
 
 
 class TokenManager:
-    def __init__(self, secret_key: str, algorithm: str = "HS256", expire_minutes: int = 45):
+    def __init__(self, secret_key: str, algorithm: str = "HS256", expire_minutes: int = 60 * 8):
         self.secret_key = secret_key
         self.algorithm = algorithm
         self.expire_minutes = expire_minutes

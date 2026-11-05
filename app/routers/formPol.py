@@ -2,7 +2,7 @@ import asyncio
 import base64
 import json
 import os
-from datetime import datetime
+from datetime import UTC, datetime
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from fastapi import (
@@ -282,7 +282,7 @@ async def actualizar(session: SessionDep,
     registro.texto_busqueda = f"{registro.no_cedula or ''} {registro.apellidos_nombres or ''}".strip()
 
     # 5. Actualizar fecha_registro como fecha de modificación (tu opción B)
-    registro.fecha_act = datetime.now()
+    registro.fecha_act = datetime.now(UTC)
     registro.ain = update_data.ain
 
 
@@ -446,6 +446,7 @@ async def upload_csv_rdp(
 
     # Crear job en la tabla correcta
     job = RDPJob(usuario=user.nombre_apellido)
+
     session.add(job)
     session.commit()
     session.refresh(job)

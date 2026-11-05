@@ -33,7 +33,7 @@
             </div>
 
             <div class="card-actions">
-            {% if user.rol in ["QC"] %}
+            {% if user.rol in ["QC","COORDINADOR"] %}
                 <form action="/tabla-base-esp/editar_poligrafico/{{ item.id }}" method="get">
                     <button class="btn btn-edit">Editar</button>
                 </form>

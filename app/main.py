@@ -81,7 +81,7 @@ async def get_login_public_key():
     Devuelve la llave pública RSA para el login.
     Este endpoint NO debe requerir autenticación.
     """
-    with open("keys\LOGIN_PUBLIC_KEY.pem", "r") as f:
+    with open("keys/LOGIN_PUBLIC_KEY.pem", "r") as f:
         public_key_pem = f.read()
 
     return {"public_key": public_key_pem}
